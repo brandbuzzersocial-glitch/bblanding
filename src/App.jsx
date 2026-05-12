@@ -423,11 +423,11 @@ export default function App() {
             <div style={{width:32,height:1,background:"#f07127"}}/>
             <span style={{fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.2em",textTransform:"uppercase",color:"#f07127"}}>India's Fastest Web Studio · Brand Buzzer</span>
           </div>
-          <h1 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(3rem,6vw,5.8rem)",fontWeight:600,lineHeight:1.06,letterSpacing:"-0.02em",marginBottom:"28px",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(24px)",transition:"all 0.9s ease 0.2s",color:T.text}}>
-            Stop Losing Leads<br/>to a <em style={{color:"#f07127"}}>Ghost Town</em><br/>Website. Get Results<br/>in 72 Hours.
+          <h1 style={{fontFamily:"Impact, sans-serif",fontSize:"clamp(2.5rem,5vw,4.5rem)",fontWeight:400,lineHeight:1.1,letterSpacing:"-0.01em",marginBottom:"28px",textTransform:"uppercase",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(24px)",transition:"all 0.9s ease 0.2s",color:T.text}}>
+            Your website is<br/><em style={{color:"#f07127",fontStyle:"normal"}}>losing you money</em><br/>every single day<br/>it's not live.
           </h1>
           <p style={{color:T.muted,fontSize:"clamp(0.9rem,1.5vw,1.06rem)",lineHeight:1.88,maxWidth:460,marginBottom:"20px",opacity:heroVis?1:0,transition:"all 0.9s ease 0.38s"}}>
-            We build high-performance, conversion-engineered digital assets that <strong style={{color:T.text}}>force your business to grow.</strong> 
+            We build premium, conversion-engineered websites in <strong style={{color:T.text}}>48–72 hours</strong> — not weeks.
           </p>
 
           <div style={{display:"flex",gap:"14px",flexWrap:"wrap",opacity:heroVis?1:0,transition:"all 0.9s ease 0.52s"}}>
