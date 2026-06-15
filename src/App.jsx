@@ -243,6 +243,7 @@ export default function App() {
 
   const [scrolled, setScrolled] = useState(false);
   const [heroVis, setHeroVis] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [form, setForm] = useState({ name:"",email:"",business:"",phone:"" });
   const [submitted, setSubmitted] = useState(false);
   const [activeP, setActiveP] = useState(0);
@@ -300,12 +301,11 @@ export default function App() {
     {name:"Surat Sales",url:"https://suratsales.in",cat:"B2B E-Commerce",stack:["Next.js","PostgreSQL","Vercel"],color:"#38bdf8",score:98,desc:"Bulk electronics distribution platform with real-time inventory and dealer portal.",stat:"₹40L revenue in month 1",tag:"B2B Marketplace"},
     {name:"Mahadev Villa",url:"https://hotelmahadevvilla.com",cat:"Luxury Hospitality",stack:["Next.js","Stripe","Sanity"],color:"#fb923c",score:99,desc:"Boutique luxury villa website with integrated booking engine and high-fidelity room galleries.",stat:"85% increase in direct bookings",tag:"Boutique Hotel + Booking"},
     {name:"Stayra",url:"https://stayra.co",cat:"Real Estate SaaS",stack:["React","Node.js","AWS"],color:"#6366f1",score:98,desc:"Modern property management and vacation rental platform with automated booking and host dashboard.",stat:"120+ bookings in Month 1",tag:"Rental Marketplace"},
-    {name:"Singh Billiards",url:"https://singh-billiards.vercel.app/",cat:"Luxury Manufacturing",stack:["Next.js","Framer","GSAP"],color:"#fbbf24",score:100,desc:"High-end manufacturing website for premium billiards and snooker tables with luxury design and scroll-triggered animations.",stat:"10× more leads via website",tag:"Heritage Brand"},
-    {name:"NestCraft Interiors",url:"https://nestcraft.in",cat:"Interior Design",stack:["React","Tailwind","Framer"],color:"#8b5cf6",score:99,desc:"High-end interior studio with 3D room walkthrough and lead capture.",stat:"3× more inquiries in week 1",tag:"E-Commerce + Lead Gen"},
-    {name:"Bloom Skincare",url:"https://bloomskincare.in",cat:"Beauty & Wellness",stack:["Next.js","Shopify","SEO"],color:"#ec4899",score:97,desc:"Full e-commerce store with custom product pages and influencer landing zones.",stat:"14% conversion rate",tag:"Online Store"},
-    {name:"Apex Ventures",url:"https://apexventures.co.in",cat:"Finance & Consulting",stack:["Vue","GSAP","Node"],color:"#22d3ee",score:100,desc:"Premium consulting firm website with animated case studies and booking system.",stat:"Top 3 Google Jaipur",tag:"Corporate + SEO"},
-    {name:"FreshBite Cloud Kitchen",url:"https://freshbite.in",cat:"Food & Beverage",stack:["React","Firebase","PWA"],color:"#f59e0b",score:98,desc:"PWA ordering platform with real-time order tracking and loyalty rewards.",stat:"2,400 orders in month 1",tag:"SaaS + PWA"},
-    {name:"ZenFit Studios",url:"https://zenfit.in",cat:"Health & Fitness",stack:["Next.js","Stripe","Auth"],color:"#4ade80",score:99,desc:"Membership platform with class scheduling, trainer profiles, and payment integration.",stat:"800 memberships in 6 weeks",tag:"Membership Platform"},
+    {name:"Singh Billiards",url:"https://singhbilliards.com/",cat:"Luxury Manufacturing",stack:["Next.js","Framer","GSAP"],color:"#fbbf24",score:100,desc:"High-end manufacturing website for premium billiards and snooker tables with luxury design and scroll-triggered animations.",stat:"10× more leads via website",tag:"Heritage Brand"},
+    {name:"Blando Studio",url:"https://blandostudiio.com/",cat:"Creative Agency",stack:["React","Framer","Tailwind"],color:"#ec4899",score:98,desc:"Minimalist creative studio portfolio with high-end typography and smooth page transitions.",stat:"5× more inquiries in Month 1",tag:"Design Studio"},
+    {name:"Infusion Bizz",url:"https://infusionbizz.com/",cat:"Enterprise IT",stack:["React","Node","MongoDB"],color:"#06b6d4",score:97,desc:"Full-scale business automation and IT consulting platform engineered for enterprise-level growth and scalability.",stat:"40% operational efficiency boost",tag:"IT Solutions"},
+    {name:"Aakash Retreat",url:"https://aakashretreat.com/",cat:"Wellness Resort",stack:["Next.js","Sanity","Stripe"],color:"#10b981",score:99,desc:"Luxury wellness resort website with immersive visual storytelling and a frictionless reservation system.",stat:"120% booking growth in 90 days",tag:"Boutique Hospitality"},
+    {name:"Cnykra",url:"https://cnykra-web.vercel.app/",cat:"Fintech + Web3",stack:["React","Web3.js","Node"],color:"#8b5cf6",score:99,desc:"Advanced crypto-banking and digital asset management platform with real-time portfolio tracking and secure wallet integration.",stat:"₹20Cr+ transaction volume",tag:"Crypto Banking"},
   ];
 
   const testimonials = [
@@ -360,11 +360,63 @@ export default function App() {
     .mockup-frame{position:relative;width:100%;max-width:760px;margin:0 auto;background:#111;border-radius:12px 12px 0 0;padding:8px;border:4px solid #222;box-shadow:0 20px 80px rgba(0,0,0,0.4)}
     .mockup-content{width:100%;aspect-ratio:16/10;background:#000;overflow:hidden;position:relative}
     .mockup-base{width:820px;max-width:110%;height:10px;background:#333;margin:0 auto;border-radius:0 0 10px 10px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-    @media(max-width:768px){.dnm{display:none!important}.g2{grid-template-columns:1fr!important}.g3{grid-template-columns:1fr!important}.g4{grid-template-columns:repeat(2,1fr)!important}.srow{flex-direction:column!important}.srv-row{flex-direction:column;align-items:flex-start;gap:16px;padding:30px 15px}}
+
+    .mobile-menu-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: var(--bg); z-index: 200; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 40px; pointer-events: none; opacity: 0;
+    }
+    .mobile-menu-overlay.open { transform: translateX(0); pointer-events: auto; opacity: 1; }
+    .mobile-link {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem;
+      font-weight: 600; text-transform: uppercase; color: var(--txt);
+      text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s;
+    }
+    .mobile-link:hover { color: #f07127; }
+    .hamburger { display: none; }
+
+    @media (max-width: 1024px) {
+      .dnm { display: none !important; }
+      .hamburger {
+        display: flex !important; flex-direction: column; gap: 6px;
+        background: none; border: none; cursor: pointer; z-index: 210;
+        padding: 10px;
+      }
+      .hamburger span {
+        display: block; width: 24px; height: 2px; background: #f07127;
+        transition: all 0.3s;
+      }
+      .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; }
+      .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+      
+      .hamburger-container { display: flex !important; }
+      nav { background: var(--bg) !important; border-bottom: 1px solid var(--bdr) !important; }
+      .g2, .g3, .g4, .srow, .srv-row { grid-template-columns: 1fr !important; flex-direction: column !important; gap: 30px !important; align-items: flex-start !important; }
+      .hero-section { flex-direction: column !important; padding-top: 120px !important; text-align: center !important; justify-content: center !important; }
+      .hero-title { font-size: 2.8rem !important; margin-left: auto !important; margin-right: auto !important; }
+      .hero-desc { margin-left: auto !important; margin-right: auto !important; }
+      .hero-btns { justify-content: center !important; }
+      .srv-desc { max-width: 100% !important; }
+      .p-dashboard { flex-direction: column !important; }
+      .hero-grid { background-size: 40px 40px !important; }
+      .hero-illustration { position: relative !important; transform: none !important; width: 80% !important; margin: 40px auto 0 !important; right: auto !important; top: auto !important; }
+      .hero-background { width: 100% !important; opacity: 0.4 !important; }
+      .hero-stats { position: relative !important; padding: 40px 6% !important; border-bottom: 1px solid var(--bdr); }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2.2rem !important; }
+      .mockup-frame { border-width: 2px; }
+      .srv-row { padding: 32px 20px !important; }
+      .srv-icon-box { width: 56px; height: 56px; }
+    }
   `;
 
   return (
-    <div style={{fontFamily:"'Barlow','Arial Narrow',sans-serif",background:T.bg,color:T.text,overflowX:"hidden",minHeight:"100vh",transition:"background 0.4s,color 0.4s"}}>
+    <div style={{fontFamily:"'Barlow','Arial Narrow',sans-serif",background:T.bg,color:T.text,overflowX:"hidden",minHeight:"100vh",transition:"background 0.4s,color 0.4s", "--bg": T.bg, "--txt": T.text, "--bdr": T.border}}>
       <style>{cs}</style>
 
       {/* ── NAV ── */}
@@ -381,21 +433,33 @@ export default function App() {
           <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"10px 22px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.72rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
             onMouseOver={e=>e.currentTarget.style.background="#e8621a"} onMouseOut={e=>e.currentTarget.style.background="#f07127"}>Get a Website</button>
         </div>
-        {/* Mobile toggle */}
-        <div className="dnm" style={{display:"none"}}/>
-        <div style={{display:"flex",gap:10,alignItems:"center"}} id="mobileNav">
+        
+        {/* Mobile Nav Toggle */}
+        <div style={{display:"none", gap:"10px", alignItems:"center"}} className="hamburger-container">
+           <ThemeToggle theme={theme} toggle={toggle}/>
+           <button className={`hamburger ${mobileMenuOpen?"open":""}`} onClick={()=>setMobileMenuOpen(!mobileMenuOpen)}>
+             <span/><span/><span/>
+           </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <div className={`mobile-menu-overlay ${mobileMenuOpen?"open":""}`}>
+          {["Services","Process","Live Work","Results","Contact"].map(n=>(
+            <a key={n} href={`#${n.toLowerCase().replace(" ","-")}`} className="mobile-link" onClick={(e)=>{e.preventDefault(); go(n.toLowerCase().replace(" ","-")); setMobileMenuOpen(false);}}>{n}</a>
+          ))}
+          <button onClick={()=>{go("contact"); setMobileMenuOpen(false);}} style={{marginTop:"20px", background:"#f07127", color:"#0f0f0f", border:"none", padding:"16px 32px", fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.9rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase"}}>Get a Website</button>
         </div>
       </nav>
 
       {/* ══ HERO ══ */}
-      <section style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",padding:"100px 6% 100px",overflow:"hidden"}}>
-        <div style={{position:"absolute",right:"-4%",top:0,bottom:0,width:"56%",zIndex:0}}>
+      <section className="hero-section" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",padding:"100px 6% 100px",overflow:"hidden"}}>
+        <div className="hero-background" style={{position:"absolute",right:"-4%",top:0,bottom:0,width:"56%",zIndex:0}}>
           <CodeMatrixRain theme={theme}/>
         </div>
         {/* glow orb */}
         <div style={{position:"absolute",right:"18%",top:"50%",transform:"translateY(-50%)",width:560,height:560,borderRadius:"50%",background:"radial-gradient(circle,rgba(240,113,39,0.12) 0%,transparent 65%)",pointerEvents:"none",zIndex:1}}/>
         {/* floating avatar */}
-        <div style={{position:"absolute",right:"5%",top:"50%",transform:"translateY(-50%)",zIndex:3,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"center",width:"42%",maxWidth:480}}>
+        <div className="hero-illustration" style={{position:"absolute",right:"5%",top:"50%",transform:"translateY(-50%)",zIndex:3,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"center",width:"42%",maxWidth:480}}>
           {/* pulsing ring behind avatar */}
           <div style={{position:"absolute",top:"50%",left:"50%",width:"90%",paddingBottom:"90%",borderRadius:"50%",border:"1.5px solid rgba(240,113,39,0.35)",animation:"avatarRingPulse 4s ease-in-out infinite",zIndex:0}}/>
           <div style={{position:"absolute",top:"50%",left:"50%",width:"70%",paddingBottom:"70%",borderRadius:"50%",border:"1px solid rgba(240,113,39,0.18)",animation:"avatarRingPulse 4s ease-in-out infinite",animationDelay:"1s",zIndex:0}}/>
@@ -423,21 +487,21 @@ export default function App() {
             <div style={{width:32,height:1,background:"#f07127"}}/>
             <span style={{fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.2em",textTransform:"uppercase",color:"#f07127"}}>India's Fastest Web Studio · Brand Buzzer</span>
           </div>
-          <h1 style={{fontFamily:"Impact, sans-serif",fontSize:"clamp(2.5rem,5vw,4.5rem)",fontWeight:400,lineHeight:1.1,letterSpacing:"-0.01em",marginBottom:"28px",textTransform:"uppercase",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(24px)",transition:"all 0.9s ease 0.2s",color:T.text}}>
+          <h1 className="hero-title" style={{fontFamily:"Impact, sans-serif",fontSize:"clamp(2.5rem,5vw,4.5rem)",fontWeight:400,lineHeight:1.1,letterSpacing:"-0.01em",marginBottom:"28px",textTransform:"uppercase",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(24px)",transition:"all 0.9s ease 0.2s",color:T.text}}>
             Your website is<br/><em style={{color:"#f07127",fontStyle:"normal"}}>losing you money</em><br/>every single day<br/>it's not live.
           </h1>
-          <p style={{color:T.muted,fontSize:"clamp(0.9rem,1.5vw,1.06rem)",lineHeight:1.88,maxWidth:460,marginBottom:"20px",opacity:heroVis?1:0,transition:"all 0.9s ease 0.38s"}}>
+          <p className="hero-desc" style={{color:T.muted,fontSize:"clamp(0.9rem,1.5vw,1.06rem)",lineHeight:1.88,maxWidth:460,marginBottom:"20px",opacity:heroVis?1:0,transition:"all 0.9s ease 0.38s"}}>
             We build premium, conversion-engineered websites in <strong style={{color:T.text}}>48–72 hours</strong> — not weeks.
           </p>
 
-          <div style={{display:"flex",gap:"14px",flexWrap:"wrap",opacity:heroVis?1:0,transition:"all 0.9s ease 0.52s"}}>
+          <div className="hero-btns" style={{display:"flex",gap:"14px",flexWrap:"wrap",opacity:heroVis?1:0,transition:"all 0.9s ease 0.52s"}}>
             <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#f07127",color:"#0f0f0f",border:"none",padding:"16px 40px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s,transform 0.2s",clipPath:"polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))"}}
               onMouseOver={e=>{e.currentTarget.style.background="#e8621a";e.currentTarget.style.transform="translateY(-2px)"}} onMouseOut={e=>{e.currentTarget.style.background="#f07127";e.currentTarget.style.transform=""}}>Claim My Free Slot &nbsp;→</button>
             <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"transparent",color:T.text,border:`1px solid ${dark?"rgba(242,238,234,0.18)":"rgba(26,16,8,0.2)"}`,padding:"15px 40px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"border-color 0.3s,color 0.3s"}}
               onMouseOver={e=>{e.currentTarget.style.borderColor="#f07127";e.currentTarget.style.color="#f07127"}} onMouseOut={e=>{e.currentTarget.style.borderColor=dark?"rgba(242,238,234,0.18)":"rgba(26,16,8,0.2)";e.currentTarget.style.color=T.text}}>See What We Build</button>
           </div>
         </div>
-        <div style={{position:"absolute",bottom:0,left:0,right:0,borderTop:`1px solid ${T.border}`,padding:"20px 6%",display:"flex",gap:"40px",flexWrap:"wrap",zIndex:2,opacity:heroVis?1:0,transition:"opacity 1.4s ease 0.8s",background:dark?"transparent":"rgba(245,242,238,0.7)"}}>
+        <div className="srow hero-stats" style={{position:"absolute",bottom:0,left:0,right:0,borderTop:`1px solid ${T.border}`,padding:"20px 6%",display:"flex",gap:"40px",flexWrap:"wrap",zIndex:2,opacity:heroVis?1:0,transition:"opacity 1.4s ease 0.8s",background:dark?"transparent":"rgba(245,242,238,0.7)"}}>
           {[["627+","Websites This Month"],["48h","Avg. Delivery"],["100%","Client Satisfaction"]].map(([v,l])=>(
             <div key={l} style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
               <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.55rem",fontWeight:500,fontStyle:"italic",color:"#f07127"}}>{v}</span>
@@ -603,16 +667,15 @@ export default function App() {
             </div>
           </div>
 
-          <div className={`rv${liveIn?" in":""}`} style={{marginBottom:"40px",position:"relative",display:"flex",background:dark?"rgba(255,255,255,0.04)":"rgba(0,0,0,0.04)",padding:"4px",borderRadius:"14px",width:"100%",maxWidth:800,margin:"0 auto 50px",border:`1px solid ${T.border}`}}>
-            <div className="p-indicator" style={{width:`calc(100% / ${projects.length})`, left: `calc(${activeP} * (100% / ${projects.length}))`, height:"calc(100% - 8px)", top:4, borderRadius:"10px" }}/>
+          <div className={`p-tab-container rv${liveIn?" in":""}`} style={{marginBottom:"40px",position:"relative",display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"8px",background:dark?"rgba(255,255,255,0.02)":"rgba(0,0,0,0.02)",padding:"8px",borderRadius:"14px",width:"100%",maxWidth:850,margin:"0 auto 50px",border:`1px solid ${T.border}`}}>
             {projects.map((p,i)=>(
-              <div key={p.name} className={`p-tab ${activeP===i?"active":""}`} onClick={()=>setActiveP(i)} style={{flex:1,textAlign:"center",zIndex:2,position:"relative",padding:"14px 0"}}>
+              <div key={p.name} className={`p-tab ${activeP===i?"active":""}`} onClick={()=>setActiveP(i)} style={{padding:"10px 20px",cursor:"pointer",borderRadius:"10px",fontSize:"0.85rem",fontWeight:500,transition:"all 0.3s ease",textAlign:"center",background:activeP===i?"rgba(240,113,39,0.12)":"transparent",border:activeP===i?"1px solid rgba(240,113,39,0.3)":"1px solid transparent",color:activeP===i?"#f07127":T.muted}}>
                 {p.name}
               </div>
             ))}
           </div>
 
-          <div className={`rv${liveIn?" in":""}`} style={{display:"flex",gap:"40px",alignItems:"flex-start"}} className="g2">
+          <div className={`p-dashboard rv${liveIn?" in":""}`} style={{display:"flex",gap:"40px",alignItems:"flex-start"}}>
             {/* Left: Preview */}
             <div style={{flex:1.4, minWidth:0}}>
               <div className="mockup-frame" style={{maxWidth:"100%"}}>
@@ -663,15 +726,6 @@ export default function App() {
               </div>
 
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"16px",background:T.bg2,padding:"16px 20px",borderRadius:12,border:`1px solid ${T.border}`}}>
-                  <div style={{width:44,height:44,borderRadius:10,background:"rgba(74,222,128,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(74,222,128,0.2)"}}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17"/><polyline points="16,7 22,7 22,13"/></svg>
-                  </div>
-                  <div>
-                    <p style={{fontSize:"0.6rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px"}}>Key Achievement</p>
-                    <p style={{fontSize:"1rem",fontWeight:600,color:"#4ade80"}}>{projects[activeP].stat}</p>
-                  </div>
-                </div>
                 <div style={{display:"flex",alignItems:"center",gap:"16px",background:T.bg2,padding:"16px 20px",borderRadius:12,border:`1px solid ${T.border}`}}>
                   <div style={{width:44,height:44,borderRadius:10,background:"rgba(240,113,39,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(240,113,39,0.2)"}}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
