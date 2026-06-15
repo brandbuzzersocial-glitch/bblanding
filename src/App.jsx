@@ -475,7 +475,7 @@ export default function App() {
               zIndex:1,
               opacity: heroVis ? 1 : 0,
               transition:"opacity 1.2s ease 0.6s",
-              mixBlendMode: "screen",
+              mixBlendMode: dark ? "screen" : "normal",
               filter: "contrast(1.1) brightness(1.1)",
             }}
           />
