@@ -237,7 +237,7 @@ function ThemeToggle({ theme, toggle }) {
 }
 
 export default function App() {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const dark = theme === "dark";
   const toggle = () => setTheme(t => t === "dark" ? "light" : "dark");
 
@@ -429,14 +429,12 @@ export default function App() {
             <button key={n} onClick={()=>go(n.toLowerCase().replace(" ","-"))} style={{background:"none",border:"none",color:T.muted,fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:500,letterSpacing:"0.14em",textTransform:"uppercase",cursor:"pointer",transition:"color 0.3s",padding:0}}
               onMouseOver={e=>e.target.style.color=T.text} onMouseOut={e=>e.target.style.color=T.muted}>{n}</button>
           ))}
-          <ThemeToggle theme={theme} toggle={toggle}/>
           <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"10px 22px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.72rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
             onMouseOver={e=>e.currentTarget.style.background="#e8621a"} onMouseOut={e=>e.currentTarget.style.background="#f07127"}>Get a Website</button>
         </div>
         
         {/* Mobile Nav Toggle */}
         <div style={{display:"none", gap:"10px", alignItems:"center"}} className="hamburger-container">
-           <ThemeToggle theme={theme} toggle={toggle}/>
            <button className={`hamburger ${mobileMenuOpen?"open":""}`} onClick={()=>setMobileMenuOpen(!mobileMenuOpen)}>
              <span/><span/><span/>
            </button>
