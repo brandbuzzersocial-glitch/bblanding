@@ -807,7 +807,13 @@ export default function App() {
                       style={{width:"100%",background:dark?"rgba(242,238,234,0.03)":"rgba(26,16,8,0.04)",border:`1px solid ${T.border}`,padding:"15px 20px",color:T.text,fontFamily:"'Barlow',sans-serif",fontSize:"0.9rem",fontWeight:400,outline:"none",transition:"border-color 0.3s,background 0.4s"}}
                       onFocus={e=>e.target.style.borderColor="#f07127"} onBlur={e=>e.target.style.borderColor=T.border}/>
                   ))}
-                  <button onClick={()=>{if(form.name&&form.email)setSubmitted(true);}} style={{marginTop:"8px",display:"flex",justifyContent:"center",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"17px 24px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.82rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
+                  <button onClick={()=>{
+                    if(form.name&&form.email){
+                      const msg = `Hi BrandBuzzer! I'd like a free strategy session.\n\nName: ${form.name}\nEmail: ${form.email}\nBusiness: ${form.business}\nPhone: ${form.phone}`;
+                      window.open(`https://wa.me/917878584866?text=${encodeURIComponent(msg)}`, '_blank');
+                      setSubmitted(true);
+                    }
+                  }} style={{marginTop:"8px",display:"flex",justifyContent:"center",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"17px 24px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.82rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
                     onMouseOver={e=>e.currentTarget.style.background="#e8621a"} onMouseOut={e=>e.currentTarget.style.background="#f07127"}>Get My Free Strategy Session &nbsp;→</button>
                   <p style={{textAlign:"center",color:T.muted,fontSize:"0.7rem",marginTop:"4px"}}>Takes 30 seconds. Zero obligation. We respond in under 2 hours.</p>
                 </div>
