@@ -420,8 +420,8 @@ export default function App() {
 
       {/* ── NAV ── */}
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,padding:"0 6%",height:"68px",display:"flex",alignItems:"center",justifyContent:"space-between",background:T.navBg,backdropFilter:scrolled?"blur(20px)":"none",borderBottom:scrolled?`1px solid ${T.border}`:"none",transition:"all 0.4s"}}>
-        <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.25rem",fontWeight:500,cursor:"pointer",color:T.text}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
-          Brand<em style={{fontStyle:"italic",color:"#f07127"}}>Buzzer</em>
+        <div style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
+          <img src="/logo.png" alt="BrandBuzzer Logo" style={{height:"40px",width:"auto"}} />
         </div>
         <div className="dnm" style={{display:"flex",gap:"32px",alignItems:"center"}}>
           {["Services","Process","Live Work","Results","Contact"].map(n=>(
@@ -499,7 +499,7 @@ export default function App() {
           </div>
         </div>
         <div className="srow hero-stats" style={{position:"absolute",bottom:0,left:0,right:0,borderTop:`1px solid ${T.border}`,padding:"20px 6%",display:"flex",gap:"40px",flexWrap:"wrap",zIndex:2,opacity:heroVis?1:0,transition:"opacity 1.4s ease 0.8s",background:dark?"transparent":"rgba(245,242,238,0.7)"}}>
-          {[["627+","Websites This Month"],["48h","Avg. Delivery"],["100%","Client Satisfaction"]].map(([v,l])=>(
+          {[["627+","Websites This Year"],["48h","Avg. Delivery"],["100%","Client Satisfaction"]].map(([v,l])=>(
             <div key={l} style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
               <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.55rem",fontWeight:500,fontStyle:"italic",color:"#f07127"}}>{v}</span>
               <span style={{color:T.muted,fontSize:"0.74rem",letterSpacing:"0.06em"}}>{l}</span>
@@ -578,7 +578,7 @@ export default function App() {
       <section ref={statsRef} style={{padding:"0 0 80px",background:T.bg,transition:"background 0.4s"}}>
         <div style={{maxWidth:1200,margin:"0 auto",borderTop:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,borderLeft:`1px solid ${T.border}`}}>
           <div style={{display:"flex"}} className="srow">
-            {[{target:627,suffix:"+",label:"Sites Launched This Month"},{target:48,suffix:"h",label:"Avg. Delivery Time"},{target:100,suffix:"%",label:"On-Time, Every Time"},{target:50,suffix:"k+",label:"Leads Generated for Clients"}].map((s,i)=>(
+            {[{target:627,suffix:"+",label:"Sites Launched This Year"},{target:48,suffix:"h",label:"Avg. Delivery Time"},{target:100,suffix:"%",label:"On-Time, Every Time"},{target:50,suffix:"k+",label:"Leads Generated for Clients"}].map((s,i)=>(
               <div key={i} style={{borderRight:`1px solid ${T.border}`,padding:"40px 28px",background:T.bg2,textAlign:"center",flex:1,minWidth:0,transition:"background 0.4s"}}>
                 <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(2.2rem,3.5vw,3rem)",fontWeight:600,fontStyle:"italic",color:"#f07127",marginBottom:"6px",lineHeight:1}}>
                   {statsIn?<Counter target={s.target} suffix={s.suffix}/>:`0${s.suffix}`}
