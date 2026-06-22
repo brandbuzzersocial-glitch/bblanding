@@ -357,8 +357,11 @@ export default function App() {
     .p-tab.active{color:#f07127}
     .p-indicator{position:absolute;height:100%;background:rgba(240,113,39,0.08);border:1px solid rgba(240,113,39,0.2);border-radius:8px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);z-index:1}
     .mockup-frame{position:relative;width:100%;max-width:760px;margin:0 auto;background:#111;border-radius:12px 12px 0 0;padding:8px;border:4px solid #222;box-shadow:0 20px 80px rgba(0,0,0,0.4)}
-    .mockup-content{width:100%;aspect-ratio:16/10;background:#000;overflow:hidden;position:relative}
+    .mockup-content{width:100%;padding-bottom:62.5%;background:#000;overflow:hidden;position:relative}
     .mockup-base{width:820px;max-width:110%;height:10px;background:#333;margin:0 auto;border-radius:0 0 10px 10px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+
+    .p-tab-container::-webkit-scrollbar { display: none; }
+    .p-tab-container { scrollbar-width: none; }
 
     .mobile-menu-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -404,6 +407,8 @@ export default function App() {
       .srv-desc { max-width: 100% !important; }
       .p-dashboard { flex-direction: column !important; align-items: center !important; }
       .p-preview-container { width: 100% !important; flex: none !important; margin-bottom: 20px; }
+      .p-tab-container { flex-wrap: nowrap !important; justify-content: flex-start !important; overflow-x: auto !important; padding-bottom: 12px !important; margin-bottom: 30px !important; }
+      .p-tab { flex-shrink: 0; }
       .hero-grid { background-size: 40px 40px !important; }
       .hero-illustration { position: relative !important; transform: none !important; width: 80% !important; margin: 40px auto 0 !important; right: auto !important; top: auto !important; }
       .hero-background { width: 100% !important; opacity: 0.4 !important; }
@@ -413,7 +418,7 @@ export default function App() {
 
     @media (max-width: 640px) {
       .hero-title { font-size: 2.2rem !important; }
-      .mockup-frame { border-width: 2px; border-radius: 8px 8px 0 0; padding: 4px; }
+      .mockup-frame { border-width: 2px; border-radius: 8px 8px 0 0; padding: 4px; width: 100%; max-width: none; }
       .mockup-base { border-radius: 0 0 6px 6px; height: 6px; }
       .srv-row { padding: 32px 20px !important; }
       .srv-icon-box { width: 56px; height: 56px; }
