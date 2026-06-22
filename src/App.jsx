@@ -735,14 +735,48 @@ export default function App() {
                 </div>
               </div>
 
-              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"16px",background:T.bg2,padding:"16px 20px",borderRadius:12,border:`1px solid ${T.border}`}}>
-                  <div style={{width:44,height:44,borderRadius:10,background:"rgba(240,113,39,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(240,113,39,0.2)"}}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"24px"}}>
+                {/* Metric 1: Performance */}
+                <div style={{display:"flex",alignItems:"center",gap:"12px",background:T.bg2,padding:"14px",borderRadius:12,border:`1px solid ${T.border}`}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:"rgba(240,113,39,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(240,113,39,0.2)",flexShrink:0}}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                   </div>
                   <div>
-                    <p style={{fontSize:"0.6rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px"}}>Performance Score</p>
-                    <p style={{fontSize:"1rem",fontWeight:600,color:T.text}}>{projects[activeP].score}/100</p>
+                    <p style={{fontSize:"0.55rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px",whiteSpace:"nowrap"}}>Performance</p>
+                    <p style={{fontSize:"0.9rem",fontWeight:600,color:T.text}}>{projects[activeP].score}/100</p>
+                  </div>
+                </div>
+
+                {/* Metric 2: SEO Score */}
+                <div style={{display:"flex",alignItems:"center",gap:"12px",background:T.bg2,padding:"14px",borderRadius:12,border:`1px solid ${T.border}`}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:"rgba(74,222,128,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(74,222,128,0.2)",flexShrink:0}}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  </div>
+                  <div>
+                    <p style={{fontSize:"0.55rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px",whiteSpace:"nowrap"}}>SEO Score</p>
+                    <p style={{fontSize:"0.9rem",fontWeight:600,color:T.text}}>100/100</p>
+                  </div>
+                </div>
+
+                {/* Metric 3: Load Speed */}
+                <div style={{display:"flex",alignItems:"center",gap:"12px",background:T.bg2,padding:"14px",borderRadius:12,border:`1px solid ${T.border}`}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:"rgba(96,165,250,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(96,165,250,0.2)",flexShrink:0}}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  <div>
+                    <p style={{fontSize:"0.55rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px",whiteSpace:"nowrap"}}>Avg. Load Time</p>
+                    <p style={{fontSize:"0.9rem",fontWeight:600,color:T.text}}>0.8s (FCP)</p>
+                  </div>
+                </div>
+
+                {/* Metric 4: Uptime */}
+                <div style={{display:"flex",alignItems:"center",gap:"12px",background:T.bg2,padding:"14px",borderRadius:12,border:`1px solid ${T.border}`}}>
+                  <div style={{width:36,height:36,borderRadius:8,background:"rgba(192,132,252,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(192,132,252,0.2)",flexShrink:0}}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  <div>
+                    <p style={{fontSize:"0.55rem",color:T.muted,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"2px",whiteSpace:"nowrap"}}>Reliability</p>
+                    <p style={{fontSize:"0.9rem",fontWeight:600,color:T.text}}>99.99% Uptime</p>
                   </div>
                 </div>
               </div>
