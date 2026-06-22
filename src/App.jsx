@@ -393,25 +393,33 @@ export default function App() {
       
       .hamburger-container { display: flex !important; }
       nav { background: var(--bg) !important; border-bottom: 1px solid var(--bdr) !important; }
-      .g2, .g3, .g4, .srow, .srv-row { grid-template-columns: 1fr !important; flex-direction: column !important; gap: 30px !important; align-items: flex-start !important; }
+      .g2, .g3, .g4, .srv-row { grid-template-columns: 1fr !important; flex-direction: column !important; gap: 30px !important; align-items: flex-start !important; }
+      .srow { flex-direction: column !important; }
+      .srow > div { border-right: none !important; border-bottom: 1px solid var(--bdr); }
+      .srow > div:last-child { border-bottom: none; }
       .hero-section { flex-direction: column !important; padding-top: 120px !important; text-align: center !important; justify-content: center !important; }
       .hero-title { font-size: 2.8rem !important; margin-left: auto !important; margin-right: auto !important; }
       .hero-desc { margin-left: auto !important; margin-right: auto !important; }
       .hero-btns { justify-content: center !important; }
       .srv-desc { max-width: 100% !important; }
-      .p-dashboard { flex-direction: column !important; }
+      .p-dashboard { flex-direction: column !important; align-items: center !important; }
+      .p-preview-container { width: 100% !important; flex: none !important; margin-bottom: 20px; }
       .hero-grid { background-size: 40px 40px !important; }
       .hero-illustration { position: relative !important; transform: none !important; width: 80% !important; margin: 40px auto 0 !important; right: auto !important; top: auto !important; }
       .hero-background { width: 100% !important; opacity: 0.4 !important; }
       .hero-stats { position: relative !important; padding: 40px 6% !important; border-bottom: 1px solid var(--bdr); }
+      .mockup-base { width: 100% !important; margin: 0 !important; }
     }
 
     @media (max-width: 640px) {
       .hero-title { font-size: 2.2rem !important; }
-      .mockup-frame { border-width: 2px; }
+      .mockup-frame { border-width: 2px; border-radius: 8px 8px 0 0; padding: 4px; }
+      .mockup-base { border-radius: 0 0 6px 6px; height: 6px; }
       .srv-row { padding: 32px 20px !important; }
       .srv-icon-box { width: 56px; height: 56px; }
+      section { padding: 50px 6% !important; }
     }
+
   `;
 
   return (
@@ -674,7 +682,7 @@ export default function App() {
 
           <div className={`p-dashboard rv${liveIn?" in":""}`} style={{display:"flex",gap:"40px",alignItems:"flex-start"}}>
             {/* Left: Preview */}
-            <div style={{flex:1.4, minWidth:0}}>
+            <div className="p-preview-container" style={{flex:1.4, minWidth:0, width:"100%"}}>
               <div className="mockup-frame" style={{maxWidth:"100%"}}>
                 <div className="mockup-content">
                   <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.6s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
