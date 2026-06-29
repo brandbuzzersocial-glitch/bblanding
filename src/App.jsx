@@ -310,9 +310,9 @@ export default function App() {
   ];
 
   const testimonials = [
-    {quote:"Honestly, I was a bit skeptical at first. 48 hours felt too fast to be real. But they delivered a site that made my lighting brand look like a proper ₹10 crore company. Sales went up 400% in 60 days. I've referred multiple business owners since.",name:"Fokal Lamps",role:"Founder, fokallamps.com"},
-    {quote:"Our old site had almost no direct bookings. Brand Buzzer rebuilt it in 3 days and we saw an 85% jump in direct bookings in the first month. The whole team was responsive and genuinely cared about getting it right.",name:"Mahadev Villa",role:"Owner, hotelmahadevvilla.com"},
-    {quote:"They've now built our website from scratch and it looks nothing like a template. Every inquiry we get now mentions how premium the site looks. We get 10x more leads through the website than we ever did before.",name:"Singh Billiards",role:"Director, singhbilliards.com"},
+    {quote:"We sell premium architectural lamps and our old website looked like a free Wix template. Brand Buzzer completely transformed it. The new site actually feels as luxurious as our products. Customers comment on it all the time now.",name:"Fokal Lamps",role:"Founder, fokallamps.com"},
+    {quote:"Running a boutique hotel, first impressions matter a lot. Our old site was driving guests to OTAs instead of booking directly with us. Brand Buzzer built us something that finally represents what Mahadev Villa actually is. Clean, warm, and trustworthy.",name:"Mahadev Villa",role:"Owner, hotelmahadevvilla.com"},
+    {quote:"We've been making billiards tables for decades but our online presence was embarrassing. Brand Buzzer understood our heritage right away and built a site that carries the weight of that legacy. It's the first thing we're proud to show new clients.",name:"Singh Billiards",role:"Director, singhbilliards.com"},
   ];
 
   const cs = `
