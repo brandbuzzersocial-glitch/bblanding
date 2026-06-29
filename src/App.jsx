@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { InlineWidget } from "react-calendly";
+
 
 function useInView(t = 0.1) {
   const ref = useRef(null);
@@ -876,31 +878,9 @@ export default function App() {
               </div>
             </div>
             <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.2s"}}>
-              {!submitted ? (
-                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {[["name","Your Full Name","text"],["email","Email Address","email"],["business","Business / Brand Name","text"],["phone","WhatsApp Number","tel"]].map(([key,ph,type])=>(
-                    <input key={key} type={type} placeholder={ph} value={form[key]} onChange={e=>setForm({...form,[key]:e.target.value})}
-                      style={{width:"100%",background:dark?"rgba(242,238,234,0.03)":"rgba(26,16,8,0.04)",border:`1px solid ${T.border}`,padding:"15px 20px",color:T.text,fontFamily:"'Barlow',sans-serif",fontSize:"0.9rem",fontWeight:400,outline:"none",transition:"border-color 0.3s,background 0.4s"}}
-                      onFocus={e=>e.target.style.borderColor="#f07127"} onBlur={e=>e.target.style.borderColor=T.border}/>
-                  ))}
-                  <button onClick={()=>{
-                    if(form.name&&form.email){
-                      const msg = `Hi BrandBuzzer! I'd like a free strategy session.\n\nName: ${form.name}\nEmail: ${form.email}\nBusiness: ${form.business}\nPhone: ${form.phone}`;
-                      window.open(`https://wa.me/917878584866?text=${encodeURIComponent(msg)}`, '_blank');
-                      setSubmitted(true);
-                    }
-                  }} style={{marginTop:"8px",display:"flex",justifyContent:"center",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"17px 24px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.82rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
-                    onMouseOver={e=>e.currentTarget.style.background="#e8621a"} onMouseOut={e=>e.currentTarget.style.background="#f07127"}>Get My Free Strategy Session &nbsp;→</button>
-                  <p style={{textAlign:"center",color:T.muted,fontSize:"0.7rem",marginTop:"4px"}}>Takes 30 seconds. Zero obligation. We respond in under 2 hours.</p>
-                </div>
-              ) : (
-                <div style={{border:`1px solid ${T.border}`,padding:"60px 40px",textAlign:"center",position:"relative",overflow:"hidden",background:T.bg,transition:"background 0.4s"}}>
-                  <div style={{position:"absolute",top:0,left:0,right:0,height:"2px",background:"linear-gradient(90deg,#f07127,transparent)"}}/>
-                  <div style={{width:40,height:1,background:"#f07127",margin:"0 auto 24px"}}/>
-                  <h3 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.8rem",fontWeight:500,marginBottom:"12px",color:T.text}}>You're locked in, {form.name}.</h3>
-                  <p style={{color:T.muted,lineHeight:1.75,fontSize:"0.88rem"}}>Our team will call or message you within <strong style={{color:T.text}}>2 hours</strong>. Check your WhatsApp.</p>
-                </div>
-              )}
+              <div style={{background: dark ? "rgba(242,238,234,0.03)" : "rgba(26,16,8,0.04)", border: `1px solid ${T.border}`, borderRadius: "12px", overflow: "hidden"}}>
+                <InlineWidget url="https://calendly.com/your-calendly-username" styles={{height: "650px", width: "100%"}} />
+              </div>
             </div>
           </div>
         </div>
