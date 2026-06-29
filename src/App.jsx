@@ -879,7 +879,7 @@ export default function App() {
             </div>
             <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.2s"}}>
               <div style={{background: dark ? "rgba(242,238,234,0.03)" : "rgba(26,16,8,0.04)", border: `1px solid ${T.border}`, borderRadius: "12px", overflow: "hidden"}}>
-                <InlineWidget url="https://calendly.com/your-calendly-username" styles={{height: "650px", width: "100%"}} />
+                <InlineWidget url="https://calendly.com/brandbuzzersocial" styles={{height: "650px", width: "100%"}} />
               </div>
             </div>
           </div>
