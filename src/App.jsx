@@ -854,16 +854,15 @@ export default function App() {
       {/* ══ CTA ══ */}
       <section id="contact" ref={ctaRef} style={{position:"relative",background:T.bg2,borderTop:`1px solid ${T.border}`,overflow:"hidden",transition:"background 0.4s"}}>
         <div style={{maxWidth:1200,margin:"0 auto",padding:"80px 6% 100px",position:"relative",zIndex:2}}>
-          <div className={`rv${ctaIn?" in":""}`} style={{marginBottom:"56px",maxWidth:520}}>
-            <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>Final Opportunity</p>
-            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(2rem,4.5vw,3.8rem)",fontWeight:500,lineHeight:1.1,color:T.text}}>Your Competitors Are<br/>Praying You Don't<br/><em style={{fontStyle:"italic",color:"#f07127"}}>Click This Button.</em></h2>
-          </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"60px",alignItems:"start"}} className="g2">
-  
-
-            <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.1s"}}>
-              <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.9rem",marginBottom:"10px"}}>Stop "thinking about it" while others are taking your market share. Book your <strong style={{color:T.text}}>Free Strategy Call</strong> right now.</p>
-              <p style={{color:"rgba(240,113,39,0.7)",fontSize:"0.82rem",fontStyle:"italic",marginBottom:"28px"}}>No fluff. No high-pressure sales. Just a direct look at the money you're leaving on the table.</p>
+            <div>
+              <div className={`rv${ctaIn?" in":""}`} style={{marginBottom:"56px",maxWidth:520}}>
+                <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>Final Opportunity</p>
+                <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(2rem,4.5vw,3.8rem)",fontWeight:500,lineHeight:1.1,color:T.text}}>Your Competitors Are<br/>Praying You Don't<br/><em style={{fontStyle:"italic",color:"#f07127"}}>Click This Button.</em></h2>
+              </div>
+              <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.1s"}}>
+                <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.9rem",marginBottom:"10px"}}>Stop "thinking about it" while others are taking your market share. Book your <strong style={{color:T.text}}>Free Strategy Call</strong> right now.</p>
+                <p style={{color:"rgba(240,113,39,0.7)",fontSize:"0.82rem",fontStyle:"italic",marginBottom:"28px"}}>No fluff. No high-pressure sales. Just a direct look at the money you're leaving on the table.</p>
               {["Full strategy roadmap included","See custom mockups in 24 hours","Launch in 3 days, not 3 months","Lifetime 24/7 priority support"].map(item=>(
                 <div key={item} style={{display:"flex",gap:"14px",alignItems:"center",fontSize:"0.84rem",marginBottom:"13px"}}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.5" strokeLinecap="round"><polyline points="20,6 9,17 4,12"/></svg>
@@ -876,6 +875,7 @@ export default function App() {
                   <div style={{fontSize:"0.66rem",color:T.muted,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"3px"}}>Prefer WhatsApp? Message us now</div>
                   <a href="https://wa.me/917878584866" style={{color:"#f07127",fontSize:"0.95rem",fontWeight:600,textDecoration:"none"}}>+91 78785 84866</a>
                 </div>
+              </div>
               </div>
             </div>
             <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.2s"}}>
