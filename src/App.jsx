@@ -310,9 +310,9 @@ export default function App() {
   ];
 
   const testimonials = [
-    {quote:"Honestly, I was a bit skeptical at first. 48 hours felt too fast to be real. But they delivered a site that made my interiors business look like a proper ₹10 crore brand. My inquiries tripled in the first week. I've referred six people since.",name:"Arjun Mehta",role:"Founder, NestCraft Interiors"},
-    {quote:"Our old site had a 1.2% conversion rate. Brand Buzzer rebuilt it in 3 days and we hit 14% in the first month. That's 11× more leads from the same traffic. Genuinely didn't expect results this fast.",name:"Sneha Agarwal",role:"CEO, Bloom Skincare"},
-    {quote:"They've now built four websites for our brands. Every single one ranks on Page 1 in Jaipur within 60 days. I don't look at them as a vendor anymore. They're basically part of the team.",name:"Rohit Sharma",role:"Director, Apex Ventures"},
+    {quote:"Honestly, I was a bit skeptical at first. 48 hours felt too fast to be real. But they delivered a site that made my lighting brand look like a proper ₹10 crore company. Sales went up 400% in 60 days. I've referred multiple business owners since.",name:"Fokal Lamps",role:"Founder, fokallamps.com"},
+    {quote:"Our old site had almost no direct bookings. Brand Buzzer rebuilt it in 3 days and we saw an 85% jump in direct bookings in the first month. The whole team was responsive and genuinely cared about getting it right.",name:"Mahadev Villa",role:"Owner, hotelmahadevvilla.com"},
+    {quote:"They've now built our website from scratch and it looks nothing like a template. Every inquiry we get now mentions how premium the site looks. We get 10x more leads through the website than we ever did before.",name:"Singh Billiards",role:"Director, singhbilliards.com"},
   ];
 
   const cs = `
