@@ -220,7 +220,7 @@ function Counter({ target, suffix }) {
   return <span ref={ref}>{val}{suffix}</span>;
 }
 
-const MQ = ["627+ Websites Launched","48-Hour Delivery — Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction.","627+ Websites Launched","48-Hour Delivery — Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction."];
+const MQ = ["627+ Websites Launched","48-Hour Delivery, Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction.","627+ Websites Launched","48-Hour Delivery, Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction."];
 
 // ── Theme Toggle Button ──
 function ThemeToggle({ theme, toggle }) {
@@ -295,7 +295,7 @@ export default function App() {
     {n:".03",title:"High-Scale E-Commerce",desc:"Frictionless checkouts and trust-engineered product pages. We've taken stores from zero to ₹10L in 30 days. Don't just sell; dominate your category.",icon:"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"},
     {n:".04",title:"Premium Personal Branding",desc:"For consultants and high-ticket service providers. Position yourself as the elite option and command the prices you actually deserve.",icon:"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"},
     {n:".05",title:"Revenue-First Redesigns",desc:"If your current site isn't making you money, it's garbage. We take your legacy site and weaponize it into a modern, leads-generating asset.",icon:"M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"},
-    {n:".06",title:"Aggressive SEO & Domination",desc:"If you're not on Page 1, you don't exist. Our SEO retainers don't just 'help' — they ensure you own the keywords your customers are searching for.",icon:"M22 12A10 10 0 1 1 12 2a10 10 0 0 1 10 10zM12 6v6l4 2"},
+    {n:".06",title:"SEO That Actually Works",desc:"If you're not on Page 1, you might as well be invisible. Our SEO retainers get you there and keep you there. We focus on the keywords your customers are actually searching for.",icon:"M22 12A10 10 0 1 1 12 2a10 10 0 0 1 10 10zM12 6v6l4 2"},
   ];
 
   const projects = [
@@ -310,9 +310,9 @@ export default function App() {
   ];
 
   const testimonials = [
-    {quote:"I was sceptical — 48 hours sounded like a gimmick. But they delivered a site that made my interiors business look like a ₹10 crore company. Inquiries tripled in the first week. I've since referred six friends.",name:"Arjun Mehta",role:"Founder, NestCraft Interiors"},
-    {quote:"Our old site had a 1.2% conversion rate. Brand Buzzer rebuilt it in 3 days and we hit 14% in the first month. That's 11× more leads from the same traffic. The ROI is insane.",name:"Sneha Agarwal",role:"CEO, Bloom Skincare"},
-    {quote:"They've now built four of our brand websites. Every single one ranks on Page 1 in Jaipur within 60 days. They're not just a vendor — they're our unfair advantage.",name:"Rohit Sharma",role:"Director, Apex Ventures"},
+    {quote:"Honestly, I was a bit skeptical at first. 48 hours felt too fast to be real. But they delivered a site that made my interiors business look like a proper ₹10 crore brand. My inquiries tripled in the first week. I've referred six people since.",name:"Arjun Mehta",role:"Founder, NestCraft Interiors"},
+    {quote:"Our old site had a 1.2% conversion rate. Brand Buzzer rebuilt it in 3 days and we hit 14% in the first month. That's 11× more leads from the same traffic. Genuinely didn't expect results this fast.",name:"Sneha Agarwal",role:"CEO, Bloom Skincare"},
+    {quote:"They've now built four websites for our brands. Every single one ranks on Page 1 in Jaipur within 60 days. I don't look at them as a vendor anymore. They're basically part of the team.",name:"Rohit Sharma",role:"Director, Apex Ventures"},
   ];
 
   const cs = `
@@ -525,7 +525,7 @@ export default function App() {
             Your website is<br/><em style={{color:"#f07127",fontStyle:"normal"}}>losing you money</em><br/>every single day<br/>it's not live.
           </h1>
           <p className="hero-desc" style={{color:T.muted,fontSize:"clamp(0.9rem,1.5vw,1.06rem)",lineHeight:1.88,maxWidth:460,marginBottom:"20px",opacity:heroVis?1:0,transition:"all 0.9s ease 0.38s"}}>
-            We build premium, conversion-engineered websites in <strong style={{color:T.text}}>48–72 hours</strong> — not weeks.
+            We build premium, conversion-focused websites in <strong style={{color:T.text}}>48–72 hours.</strong> Not weeks. No waiting around.
           </p>
 
           <div className="hero-btns" style={{display:"flex",gap:"14px",flexWrap:"wrap",opacity:heroVis?1:0,transition:"all 0.9s ease 0.52s"}}>
@@ -586,8 +586,8 @@ export default function App() {
         <div style={{padding:"80px 6%",background:T.bg,transition:"background 0.4s"}}>
           <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"80px",alignItems:"start"}} className="g2">
             <div className={`rv${aboutIn?" in":""}`}>
-              <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.92rem",marginBottom:"18px"}}>Most websites are <strong style={{color:T.text}}>expensive liabilities</strong>. They load slow, look cheap, and repel your best customers without you even knowing it.</p>
-              <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.92rem",marginBottom:"36px"}}>Brand Buzzer is the "Unfair Advantage" for 600+ businesses. We eliminate the friction between your traffic and your bank account. <strong style={{color:T.text}}>Fast delivery. Zero excuses. Maximum impact.</strong></p>
+              <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.92rem",marginBottom:"18px"}}>Most websites are quietly costing businesses money. They load too slow, look outdated, and push away the exact customers you're trying to reach.</p>
+              <p style={{color:T.muted,lineHeight:1.9,fontSize:"0.92rem",marginBottom:"36px"}}>We've helped 600+ businesses fix this. Brand Buzzer builds websites that actually work for you, so there's less friction between your visitors and your revenue. <strong style={{color:T.text}}>Fast, honest, and built to last.</strong></p>
               {["Custom code, zero bloated templates","High-fidelity designs in 24 hours","Launch-ready assets in 48-72 hours","Rank Page 1 or we keep working for free"].map(item=>(
                 <div key={item} style={{display:"flex",gap:"14px",alignItems:"center",fontSize:"0.85rem",marginBottom:"11px"}}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.5" strokeLinecap="round"><polyline points="20,6 9,17 4,12"/></svg>
@@ -599,7 +599,7 @@ export default function App() {
               <div style={{border:`1px solid ${T.border}`,background:T.bg2,padding:"36px",position:"relative",boxShadow:T.shadow,transition:"all 0.4s"}}>
                 <div style={{position:"absolute",top:0,left:0,width:"30%",height:"2px",background:"#f07127"}}/>
                 <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontStyle:"italic",fontSize:"1.1rem",lineHeight:1.7,color:T.text,marginBottom:"26px"}}>
-                  "Every day without a high-converting website is a day handing customers to your competitors. We fix that in 72 hours — or <em style={{color:"#f07127"}}>you don't pay a rupee.</em>"
+                  "Every day without a great website is a day handing customers to your competitors. We fix that in 72 hours. And if we don't deliver? <em style={{color:"#f07127"}}>You don't pay a single rupee.</em>"
                 </p>
                 <div style={{borderTop:`1px solid ${T.border}`,paddingTop:"18px",display:"flex",gap:"14px",alignItems:"center"}}>
                   <div style={{width:38,height:38,borderRadius:"50%",background:"linear-gradient(135deg,#f07127,#b04010)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:500,color:"#fff",fontSize:"0.82rem"}}>BB</div>
@@ -832,7 +832,7 @@ export default function App() {
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           <div className={`rv${testIn?" in":""}`} style={{marginBottom:"60px"}}>
             <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>Real Results. Real Clients.</p>
-            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.9rem,3.2vw,2.9rem)",fontWeight:500,lineHeight:1.15,color:T.text}}>Don't take our word for it —<br/><em style={{fontStyle:"italic",color:"#f07127"}}>take theirs.</em></h2>
+            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.9rem,3.2vw,2.9rem)",fontWeight:500,lineHeight:1.15,color:T.text}}>Don't take our word for it.<br/><em style={{fontStyle:"italic",color:"#f07127"}}>Here's what our clients say.</em></h2>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px"}} className="g3">
             {testimonials.map((t,i)=>(
