@@ -371,6 +371,11 @@ export default function App() {
       .p-tab-container { scrollbar-width: thin; }
     }
 
+    .mockup-nav-btn { flex:1; cursor:pointer; display:flex; align-items:center; padding:20px; color:#f07127; opacity:0; transition:opacity 0.3s; }
+    .mockup-nav-btn.left { justify-content:flex-start; background:linear-gradient(to right, rgba(0,0,0,0.6), transparent); }
+    .mockup-nav-btn.right { justify-content:flex-end; background:linear-gradient(to left, rgba(0,0,0,0.6), transparent); }
+    .mockup-nav-btn:hover { opacity:1; }
+
     .mobile-menu-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
       background: var(--bg); z-index: 200; display: flex; flex-direction: column;
@@ -431,6 +436,8 @@ export default function App() {
       .srv-row { padding: 32px 20px !important; }
       .srv-icon-box { width: 56px; height: 56px; }
       section { padding: 50px 6% !important; }
+      .mockup-nav-btn { opacity: 0.8; padding: 10px; }
+      .mockup-nav-btn svg { width: 24px; height: 24px; }
     }
 
   `;
@@ -707,13 +714,11 @@ export default function App() {
                           title={p.name}
                         />
                         <div style={{position:"absolute",inset:0,display:"flex"}}>
-                          <div style={{flex:1,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"flex-start",padding:"20px",color:"#f07127",opacity:0,transition:"opacity 0.3s",background:"linear-gradient(to right, rgba(0,0,0,0.4), transparent)"}} 
-                               onMouseOver={e=>e.currentTarget.style.opacity=1} onMouseOut={e=>e.currentTarget.style.opacity=0}
+                          <div className="mockup-nav-btn left"
                                onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev - 1 + projects.length) % projects.length)}}>
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
                           </div>
-                          <div style={{flex:1,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"20px",color:"#f07127",opacity:0,transition:"opacity 0.3s",background:"linear-gradient(to left, rgba(0,0,0,0.4), transparent)"}}
-                               onMouseOver={e=>e.currentTarget.style.opacity=1} onMouseOut={e=>e.currentTarget.style.opacity=0}
+                          <div className="mockup-nav-btn right"
                                onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev + 1) % projects.length)}}>
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
                           </div>
