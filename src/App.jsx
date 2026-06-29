@@ -368,13 +368,17 @@ export default function App() {
       .p-tab-container::-webkit-scrollbar { display: block; height: 6px; }
       .p-tab-container::-webkit-scrollbar-track { background: rgba(240,113,39,0.05); border-radius: 4px; }
       .p-tab-container::-webkit-scrollbar-thumb { background: rgba(240,113,39,0.3); border-radius: 4px; }
-      .p-tab-container { scrollbar-width: thin; }
+      .outside-nav-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--bdr);
+      display: flex; align-items: center; justify-content: center;
+      color: #f07127; cursor: pointer; z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s;
     }
-
-    .mockup-nav-btn { flex:1; cursor:pointer; display:flex; align-items:center; padding:20px; color:#f07127; opacity:0; transition:opacity 0.3s; }
-    .mockup-nav-btn.left { justify-content:flex-start; background:linear-gradient(to right, rgba(0,0,0,0.6), transparent); }
-    .mockup-nav-btn.right { justify-content:flex-end; background:linear-gradient(to left, rgba(0,0,0,0.6), transparent); }
-    .mockup-nav-btn:hover { opacity:1; }
+    .outside-nav-btn:hover { background: #f07127; color: #0f0f0f; transform: translateY(-50%) scale(1.1); border-color: #f07127; }
+    .outside-nav-btn.left { left: -24px; }
+    .outside-nav-btn.right { right: -24px; }
 
     .mobile-menu-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -436,8 +440,10 @@ export default function App() {
       .srv-row { padding: 32px 20px !important; }
       .srv-icon-box { width: 56px; height: 56px; }
       section { padding: 50px 6% !important; }
-      .mockup-nav-btn { opacity: 0.8; padding: 10px; }
-      .mockup-nav-btn svg { width: 24px; height: 24px; }
+      .outside-nav-btn { width: 40px; height: 40px; }
+      .outside-nav-btn.left { left: -12px; }
+      .outside-nav-btn.right { right: -12px; }
+      .outside-nav-btn svg { width: 20px; height: 20px; }
     }
 
   `;
@@ -702,39 +708,38 @@ export default function App() {
 
           <div className={`p-dashboard rv${liveIn?" in":""}`} style={{display:"flex",gap:"40px",alignItems:"flex-start"}}>
             {/* Left: Preview */}
-            <div className="p-preview-container" style={{flex:1.4, minWidth:0, width:"100%"}}>
-              <div className="mockup-frame" style={{maxWidth:"100%"}}>
-                <div className="mockup-content">
-                  <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.6s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
-                    {projects.map((p,i)=>(
-                      <div key={i} style={{minWidth:"100%",height:"100%",position:"relative"}}>
-                        <iframe 
-                          src={p.url} 
-                          style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
-                          title={p.name}
-                        />
-                        <div style={{position:"absolute",inset:0,display:"flex"}}>
-                          <div className="mockup-nav-btn left"
-                               onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev - 1 + projects.length) % projects.length)}}>
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-                          </div>
-                          <div className="mockup-nav-btn right"
-                               onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev + 1) % projects.length)}}>
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <div className="p-preview-container" style={{flex:1.4, minWidth:0, width:"100%", position:"relative"}}>
+              <div className="outside-nav-btn left" onClick={()=>setActiveP(prev=>(prev - 1 + projects.length) % projects.length)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </div>
+              <div className="outside-nav-btn right" onClick={()=>setActiveP(prev=>(prev + 1) % projects.length)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div style={{width:"100%"}}>
+                <div className="mockup-frame" style={{maxWidth:"100%"}}>
+                  <div className="mockup-content">
+                    <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.6s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
+                      {projects.map((p,i)=>(
+                        <div key={i} style={{minWidth:"100%",height:"100%",position:"relative"}}>
+                          <iframe 
+                            src={p.url} 
+                            style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
+                            title={p.name}
+                          />
+                          <div style={{position:"absolute",inset:0,background:"transparent"}}/>
+                          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:T.bg2,zIndex:-1}}>
+                            <div style={{textAlign:"center"}}>
+                              <p style={{color:T.muted,fontSize:"0.8rem",marginBottom:"8px"}}>Previewing {p.url}</p>
+                              <button style={{color:"#f07127",background:"transparent",border:"1px solid #f07127",padding:"6px 12px",borderRadius:4,fontSize:"0.7rem",cursor:"pointer"}}>Open Live Site</button>
+                            </div>
                           </div>
                         </div>
-                        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:T.bg2,zIndex:-1}}>
-                          <div style={{textAlign:"center"}}>
-                            <p style={{color:T.muted,fontSize:"0.8rem",marginBottom:"8px"}}>Previewing {p.url}</p>
-                            <button style={{color:"#f07127",background:"transparent",border:"1px solid #f07127",padding:"6px 12px",borderRadius:4,fontSize:"0.7rem",cursor:"pointer"}}>Open Live Site</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
+                <div className="mockup-base" style={{width:"105%",margin:"0 -2.5%"}}/>
               </div>
-              <div className="mockup-base" style={{width:"105%",margin:"0 -2.5%"}}/>
             </div>
 
             {/* Right: Details */}
