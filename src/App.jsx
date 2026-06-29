@@ -360,8 +360,16 @@ export default function App() {
     .mockup-content{width:100%;padding-bottom:62.5%;background:#000;overflow:hidden;position:relative}
     .mockup-base{width:820px;max-width:110%;height:10px;background:#333;margin:0 auto;border-radius:0 0 10px 10px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
 
-    .p-tab-container::-webkit-scrollbar { display: none; }
-    .p-tab-container { scrollbar-width: none; }
+    @media (min-width: 1025px) {
+      .p-tab-container::-webkit-scrollbar { display: none; }
+      .p-tab-container { scrollbar-width: none; }
+    }
+    @media (max-width: 1024px) {
+      .p-tab-container::-webkit-scrollbar { display: block; height: 6px; }
+      .p-tab-container::-webkit-scrollbar-track { background: rgba(240,113,39,0.05); border-radius: 4px; }
+      .p-tab-container::-webkit-scrollbar-thumb { background: rgba(240,113,39,0.3); border-radius: 4px; }
+      .p-tab-container { scrollbar-width: thin; }
+    }
 
     .mobile-menu-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -698,7 +706,18 @@ export default function App() {
                           style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
                           title={p.name}
                         />
-                        <div style={{position:"absolute",inset:0,background:"transparent"}} onClick={()=>window.open(p.url,"_blank")}/>
+                        <div style={{position:"absolute",inset:0,display:"flex"}}>
+                          <div style={{flex:1,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"flex-start",padding:"20px",color:"#f07127",opacity:0,transition:"opacity 0.3s",background:"linear-gradient(to right, rgba(0,0,0,0.4), transparent)"}} 
+                               onMouseOver={e=>e.currentTarget.style.opacity=1} onMouseOut={e=>e.currentTarget.style.opacity=0}
+                               onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev - 1 + projects.length) % projects.length)}}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+                          </div>
+                          <div style={{flex:1,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"flex-end",padding:"20px",color:"#f07127",opacity:0,transition:"opacity 0.3s",background:"linear-gradient(to left, rgba(0,0,0,0.4), transparent)"}}
+                               onMouseOver={e=>e.currentTarget.style.opacity=1} onMouseOut={e=>e.currentTarget.style.opacity=0}
+                               onClick={(e)=>{e.stopPropagation(); setActiveP(prev=>(prev + 1) % projects.length)}}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+                          </div>
+                        </div>
                         <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:T.bg2,zIndex:-1}}>
                           <div style={{textAlign:"center"}}>
                             <p style={{color:T.muted,fontSize:"0.8rem",marginBottom:"8px"}}>Previewing {p.url}</p>
