@@ -879,8 +879,13 @@ export default function App() {
               </div>
             </div>
             <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.2s"}}>
-              <div style={{background: dark ? "rgba(242,238,234,0.03)" : "rgba(26,16,8,0.04)", border: `1px solid ${T.border}`, borderRadius: "12px", overflow: "hidden"}}>
+              <div style={{background: dark ? "rgba(242,238,234,0.03)" : "rgba(26,16,8,0.04)", border: `1px solid ${T.border}`, borderRadius: "12px", overflow: "hidden", position: "relative"}}>
                 <InlineWidget url="https://calendly.com/brandbuzzersocial" styles={{height: "650px", width: "100%"}} />
+                {/* Logo strip over the grey empty space at the bottom of the Calendly widget */}
+                <div style={{position:"absolute", bottom:0, left:0, right:0, height:"220px", background: dark ? "#171717" : "#ece8e2", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"12px", pointerEvents:"none", borderTop:`1px solid ${T.border}`}}>
+                  <img src="/logo.png" alt="BrandBuzzer Logo" style={{height:"52px", width:"auto", opacity: dark ? 0.9 : 1}} />
+                  <p style={{fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.72rem", fontWeight:500, letterSpacing:"0.18em", textTransform:"uppercase", color:T.muted}}>India's Fastest Web Studio</p>
+                </div>
               </div>
             </div>
           </div>
