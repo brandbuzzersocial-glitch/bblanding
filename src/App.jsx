@@ -370,7 +370,8 @@ export default function App() {
       .p-tab-container::-webkit-scrollbar { display: block; height: 6px; }
       .p-tab-container::-webkit-scrollbar-track { background: rgba(240,113,39,0.05); border-radius: 4px; }
       .p-tab-container::-webkit-scrollbar-thumb { background: rgba(240,113,39,0.3); border-radius: 4px; }
-      .outside-nav-btn {
+    }
+    .outside-nav-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 48px; height: 48px; border-radius: 50%;
       background: var(--bg); border: 1px solid var(--bdr);
