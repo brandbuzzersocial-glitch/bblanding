@@ -304,7 +304,7 @@ export default function App() {
     {name:"Mahadev Villa",url:"https://hotelmahadevvilla.com",cat:"Luxury Hospitality",stack:["React","GSAP","Tailwind"],color:"#fb923c",score:99,desc:"Boutique luxury villa website with integrated booking engine and high-fidelity room galleries.",stat:"85% increase in direct bookings",tag:"Boutique Hotel + Booking"},
     {name:"Stayra",url:"https://stayra.co",cat:"Real Estate SaaS",stack:["Next.js","React","Tailwind"],color:"#6366f1",score:98,desc:"Modern property management and vacation rental platform with automated booking and host dashboard.",stat:"120+ bookings in Month 1",tag:"Rental Marketplace"},
     {name:"Singh Billiards",url:"https://singhbilliards.com/",cat:"Luxury Manufacturing",stack:["React","Tailwind","Vite"],color:"#fbbf24",score:100,desc:"High-end manufacturing website for premium billiards and snooker tables with luxury design and scroll-triggered animations.",stat:"10× more leads via website",tag:"Heritage Brand"},
-    {name:"Blando Studio",url:"https://blandostudiio.com/",cat:"Clothing E-Commerce",stack:["Shopify","Liquid","Bootstrap"],color:"#ec4899",score:98,desc:"Premium clothing brand storefront with curated collections, seamless checkout, and high-conversion product pages.",stat:"5× more inquiries in Month 1",tag:"Fashion Brand"},
+    {name:"Blando Studio",url:"https://blandostudiio.com/",cat:"Clothing E-Commerce",stack:["Shopify","Liquid","Bootstrap"],color:"#ec4899",score:98,desc:"Premium clothing brand storefront with curated collections, seamless checkout, and high-conversion product pages.",stat:"5× more inquiries in Month 1",tag:"Fashion Brand",screenshot:"/blando-preview.png"},
     {name:"Infusion Bizz",url:"https://infusionbizz.com/",cat:"Enterprise IT",stack:["React","Tailwind","Vite"],color:"#06b6d4",score:97,desc:"Full-scale business automation and IT consulting platform engineered for enterprise-level growth and scalability.",stat:"40% operational efficiency boost",tag:"IT Solutions"},
     {name:"Cnykra",url:"https://cnykra-web.vercel.app/",cat:"Fintech + Web3",stack:["Next.js","React","Tailwind"],color:"#8b5cf6",score:99,desc:"Advanced crypto-banking and digital asset management platform with real-time portfolio tracking and secure wallet integration.",stat:"₹20Cr+ transaction volume",tag:"Crypto Banking"},
   ];
@@ -724,11 +724,15 @@ export default function App() {
                     <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.6s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
                       {projects.map((p,i)=>(
                         <div key={i} style={{minWidth:"100%",height:"100%",position:"relative"}}>
-                          <iframe 
-                            src={p.url} 
-                            style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
-                            title={p.name}
-                          />
+                          {p.screenshot ? (
+                            <img src={p.screenshot} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top"}} />
+                          ) : (
+                            <iframe 
+                              src={p.url} 
+                              style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
+                              title={p.name}
+                            />
+                          )}
                           <div style={{position:"absolute",inset:0,background:"transparent"}}/>
                           <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:T.bg2,zIndex:-1}}>
                             <div style={{textAlign:"center"}}>
