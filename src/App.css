@@ -9,11 +9,15 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+  background-color: #0f0f0f;
 }
 
 body {
   overflow-x: hidden;
   touch-action: manipulation;
+  background-color: #0f0f0f;
+  color: #f2eeea;
 }
 
 ::-webkit-scrollbar {
