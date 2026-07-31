@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { InlineWidget } from "react-calendly";
-
+import "./App.css";
 
 function useInView(t = 0.1) {
   const ref = useRef(null);
@@ -9,7 +9,7 @@ function useInView(t = 0.1) {
     const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: t });
     if (ref.current) o.observe(ref.current);
     return () => o.disconnect();
-  }, []);
+  }, [t]);
   return [ref, v];
 }
 
@@ -23,14 +23,36 @@ function CodeMatrixRain({ theme }) {
     let H = canvas.height = canvas.offsetHeight;
     const chars = ["<div>","</div>","const","=>","{","}","function","return","import","export","async","await","null","true","false","[ ]","( )","===","!==","0px","var(","rem","vh","&&","||","?.","??","npm","git","API","SQL","CSS","JSX","TSX","*.js","404","200"];
     const COL_W = 22;
-    const cols = Math.floor(W / COL_W);
-    const drops = Array.from({length: cols}, () => Math.random() * -50);
-    const speeds = Array.from({length: cols}, () => 0.15 + Math.random() * 0.25);
-    const brightCol = Array.from({length: cols}, () => Math.random() > 0.7);
+    let cols = Math.floor(W / COL_W);
+    let drops = Array.from({length: cols}, () => Math.random() * -50);
+    let speeds = Array.from({length: cols}, () => 0.15 + Math.random() * 0.25);
+    let brightCol = Array.from({length: cols}, () => Math.random() > 0.7);
     const mousePos = {x: -9999, y: -9999};
-    const onMouse = e => { const r = canvas.getBoundingClientRect(); mousePos.x = e.clientX - r.left; mousePos.y = e.clientY - r.top; };
+
+    const updatePos = (clientX, clientY) => {
+      const r = canvas.getBoundingClientRect();
+      mousePos.x = clientX - r.left;
+      mousePos.y = clientY - r.top;
+    };
+    const onMouse = e => updatePos(e.clientX, e.clientY);
+    const onTouch = e => {
+      if (e.touches && e.touches[0]) {
+        updatePos(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
     canvas.addEventListener("mousemove", onMouse);
-    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+    canvas.addEventListener("touchstart", onTouch, { passive: true });
+    canvas.addEventListener("touchmove", onTouch, { passive: true });
+
+    const onResize = () => {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+      cols = Math.floor(W / COL_W);
+      drops = Array.from({length: cols}, () => Math.random() * -50);
+      speeds = Array.from({length: cols}, () => 0.15 + Math.random() * 0.25);
+      brightCol = Array.from({length: cols}, () => Math.random() > 0.7);
+    };
     window.addEventListener("resize", onResize);
     let frame;
     const isDark = theme === "dark";
@@ -62,7 +84,13 @@ function CodeMatrixRain({ theme }) {
       }
     };
     draw();
-    return () => { cancelAnimationFrame(frame); canvas.removeEventListener("mousemove", onMouse); window.removeEventListener("resize", onResize); };
+    return () => {
+      cancelAnimationFrame(frame);
+      canvas.removeEventListener("mousemove", onMouse);
+      canvas.removeEventListener("touchstart", onTouch);
+      canvas.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("resize", onResize);
+    };
   }, [theme]);
   return <canvas ref={canvasRef} style={{position:"absolute",inset:0,width:"100%",height:"100%",cursor:"crosshair"}} />;
 }
@@ -76,8 +104,23 @@ function CircuitNetwork({ theme }) {
     let W = canvas.width = canvas.offsetWidth;
     let H = canvas.height = canvas.offsetHeight;
     const mousePos = {x: -999, y: -999};
-    const onMouse = e => { const r = canvas.getBoundingClientRect(); mousePos.x = e.clientX - r.left; mousePos.y = e.clientY - r.top; };
+
+    const updatePos = (clientX, clientY) => {
+      const r = canvas.getBoundingClientRect();
+      mousePos.x = clientX - r.left;
+      mousePos.y = clientY - r.top;
+    };
+    const onMouse = e => updatePos(e.clientX, e.clientY);
+    const onTouch = e => {
+      if (e.touches && e.touches[0]) {
+        updatePos(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
     canvas.addEventListener("mousemove", onMouse);
+    canvas.addEventListener("touchstart", onTouch, { passive: true });
+    canvas.addEventListener("touchmove", onTouch, { passive: true });
+
     const NUM = 36;
     const nodes = Array.from({length: NUM}, () => ({
       x: Math.random() * W, y: Math.random() * H,
@@ -89,11 +132,10 @@ function CircuitNetwork({ theme }) {
     }));
     const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; nodes.forEach(n=>{n.x=Math.random()*W;n.y=Math.random()*H;}); };
     window.addEventListener("resize", onResize);
-    let frame; let t = 0;
+    let frame;
     const isDark = theme === "dark";
     const draw = () => {
       frame = requestAnimationFrame(draw);
-      t += 0.016;
       ctx.clearRect(0, 0, W, H);
       nodes.forEach(n => {
         n.x += n.vx; n.y += n.vy; n.pulse += 0.04;
@@ -146,59 +188,15 @@ function CircuitNetwork({ theme }) {
       });
     };
     draw();
-    return () => { cancelAnimationFrame(frame); canvas.removeEventListener("mousemove", onMouse); window.removeEventListener("resize", onResize); };
+    return () => {
+      cancelAnimationFrame(frame);
+      canvas.removeEventListener("mousemove", onMouse);
+      canvas.removeEventListener("touchstart", onTouch);
+      canvas.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("resize", onResize);
+    };
   }, [theme]);
   return <canvas ref={canvasRef} style={{position:"absolute",inset:0,width:"100%",height:"100%"}} />;
-}
-
-function TerminalDeploy({ theme }) {
-  const [lines, setLines] = useState([]);
-  const termRef = useRef(null);
-  const isDark = theme === "dark";
-  const deployLines = [
-    {t:"cmd",txt:"$ git push origin main"},{t:"info",txt:"Enumerating objects: 24, done."},
-    {t:"info",txt:"Counting objects: 100% (24/24), done."},{t:"info",txt:"Delta compression using up to 8 threads"},
-    {t:"ok",txt:"Writing objects: 100% (18/18), 42.8 KiB"},{t:"ok",txt:"Branch 'main' set up to track remote."},
-    {t:"sep",txt:""},{t:"cmd",txt:"$ npm run build"},{t:"info",txt:"▶  Building for production..."},
-    {t:"info",txt:"  ✓  Compiled 142 modules in 2.3s"},{t:"ok",txt:"  ✓  Bundle: main.js 87.2 KB (gzip: 24.1 KB)"},
-    {t:"sep",txt:""},{t:"cmd",txt:"$ vercel deploy --prod"},
-    {t:"info",txt:"  🔗  Linked to brandbuzzer/client-site"},
-    {t:"info",txt:"  📦  Uploading build output..."},{t:"info",txt:"  🌍  Propagating to 98 edge locations..."},
-    {t:"ok",txt:"  ✅  Production deployment complete!"},{t:"url",txt:"  🚀  https://client-site.brandbuzzer.co"},
-    {t:"sep",txt:""},{t:"perf",txt:"  ⚡  Lighthouse: Performance 99 / SEO 100"},
-    {t:"perf",txt:"  ⚡  FCP: 0.4s  |  LCP: 0.9s  |  CLS: 0"},
-  ];
-  useEffect(() => {
-    let idx = 0;
-    const add = () => {
-      if (idx >= deployLines.length) { setTimeout(()=>{setLines([]);idx=0;setTimeout(add,800)},2200); return; }
-      setLines(prev => [...prev, deployLines[idx++]]);
-      if (termRef.current) termRef.current.scrollTop = termRef.current.scrollHeight;
-      setTimeout(add, 140 + Math.random()*160);
-    };
-    const t = setTimeout(add, 400);
-    return () => clearTimeout(t);
-  }, []);
-  const color = t => t==="cmd"?"#f07127":t==="ok"?"#4ade80":t==="url"?"#60a5fa":t==="perf"?"#facc15":t==="sep"?"transparent": isDark ? "rgba(242,238,234,0.55)" : "rgba(60,50,40,0.75)";
-  return (
-    <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
-      <div style={{width:"100%",maxWidth:460,background: isDark ? "rgba(10,10,10,0.92)" : "rgba(255,255,255,0.95)",border: isDark ? "1px solid rgba(240,113,39,0.25)" : "1px solid rgba(240,113,39,0.3)",borderRadius:"8px",overflow:"hidden",boxShadow: isDark ? "0 0 60px rgba(240,113,39,0.12)" : "0 8px 40px rgba(240,113,39,0.15)"}}>
-        <div style={{padding:"10px 16px",borderBottom: isDark ? "1px solid rgba(240,113,39,0.15)" : "1px solid rgba(240,113,39,0.18)",display:"flex",alignItems:"center",gap:"8px",background: isDark ? "rgba(240,113,39,0.06)" : "rgba(240,113,39,0.05)"}}>
-          <div style={{width:10,height:10,borderRadius:"50%",background:"#ff5f57"}}/><div style={{width:10,height:10,borderRadius:"50%",background:"#febc2e"}}/><div style={{width:10,height:10,borderRadius:"50%",background:"#28c840"}}/>
-          <span style={{marginLeft:8,fontFamily:"'Courier New',monospace",fontSize:"0.7rem",color:"rgba(240,113,39,0.6)",letterSpacing:"0.08em"}}>brandbuzzer — deploy</span>
-        </div>
-        <div ref={termRef} style={{padding:"16px",fontFamily:"'Courier New',monospace",fontSize:"0.72rem",lineHeight:1.7,height:320,overflowY:"auto",scrollbarWidth:"none",background: isDark ? "transparent" : "rgba(252,249,245,0.9)"}}>
-          {lines.map((l,i) => l.t==="sep"?<div key={i} style={{height:8}}/> : (
-            <div key={i} style={{color:color(l.t),display:"flex",alignItems:"baseline",gap:6}}>
-              <span style={{opacity:0.3,userSelect:"none",minWidth:16,fontSize:"0.6rem"}}>{(i+1).toString().padStart(2,"0")}</span>
-              <span>{l.txt}</span>
-            </div>
-          ))}
-          <span style={{display:"inline-block",width:7,height:13,background:"#f07127",animation:"cursorblink 1s step-end infinite",verticalAlign:"text-bottom",marginLeft:2}}/>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function Counter({ target, suffix }) {
@@ -216,13 +214,12 @@ function Counter({ target, suffix }) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView]);
+  }, [inView, target]);
   return <span ref={ref}>{val}{suffix}</span>;
 }
 
 const MQ = ["627+ Websites Launched","48-Hour Delivery, Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction.","627+ Websites Launched","48-Hour Delivery, Guaranteed","Zero Templates. 100% Custom.","Clients Report 3× More Leads","₹0 Upfront. Pay On Satisfaction."];
 
-// ── Theme Toggle Button ──
 function ThemeToggle({ theme, toggle }) {
   const dark = theme === "dark";
   return (
@@ -239,15 +236,12 @@ function ThemeToggle({ theme, toggle }) {
 }
 
 export default function App() {
-  const [theme, setTheme] = useState("light");
-  const dark = theme === "dark";
-  const toggle = () => setTheme(t => t === "dark" ? "light" : "dark");
+  const [theme] = useState("dark");
+  const dark = true;
 
   const [scrolled, setScrolled] = useState(false);
   const [heroVis, setHeroVis] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [form, setForm] = useState({ name:"",email:"",business:"",phone:"" });
-  const [submitted, setSubmitted] = useState(false);
   const [activeP, setActiveP] = useState(0);
 
   const [aboutRef, aboutIn] = useInView();
@@ -258,6 +252,16 @@ export default function App() {
   const [statsRef, statsIn] = useInView(0.2);
   const [liveRef, liveIn] = useInView(0.1);
 
+  // Lock body scrolling when mobile navigation menu is active
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     const t = setTimeout(() => setHeroVis(true), 80);
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -265,9 +269,36 @@ export default function App() {
     return () => { clearTimeout(t); window.removeEventListener("scroll", onScroll); };
   }, []);
 
+  // Touch Swipe for Project Showcase Carousel
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e) => {
+    if (e.targetTouches && e.targetTouches[0]) {
+      touchStartX.current = e.targetTouches[0].clientX;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.targetTouches && e.targetTouches[0]) {
+      touchEndX.current = e.targetTouches[0].clientX;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 40) {
+      setActiveP(prev => (prev + 1) % projects.length);
+    } else if (diff < -40) {
+      setActiveP(prev => (prev - 1 + projects.length) % projects.length);
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
   const go = id => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
 
-  // ── Theme tokens ──
   const T = {
     bg:       dark ? "#0f0f0f" : "#f5f2ee",
     bg2:      dark ? "#171717" : "#ece8e2",
@@ -276,17 +307,10 @@ export default function App() {
     muted:    dark ? "#6b6560" : "#8a7f75",
     border:   dark ? "rgba(240,113,39,0.14)" : "rgba(200,90,20,0.18)",
     navBg:    scrolled ? (dark ? "rgba(15,15,15,0.92)" : "rgba(245,242,238,0.94)") : "transparent",
-    navBdr:   scrolled ? (dark ? "rgba(240,113,39,0.14)" : "rgba(200,90,20,0.18)") : "none",
     gridLine: dark ? "rgba(240,113,39,0.025)" : "rgba(200,90,20,0.06)",
     wmColor:  dark ? "rgba(240,113,39,0.04)" : "rgba(200,90,20,0.06)",
-    scanBg:   dark ? "rgba(15,15,15,0.18)" : "rgba(245,242,238,0.18)",
     card:     dark ? "#171717" : "#fff",
-    cardBrd:  dark ? "rgba(240,113,39,0.14)" : "rgba(200,90,20,0.2)",
     shadow:   dark ? "none" : "0 2px 20px rgba(0,0,0,0.07)",
-    termBg:   dark ? "rgba(10,10,10,0.92)" : "rgba(255,255,255,0.95)",
-    termLine: dark ? "rgba(242,238,234,0.55)" : "rgba(60,50,40,0.7)",
-    inpBg:    dark ? "rgba(242,238,234,0.03)" : "rgba(30,20,10,0.03)",
-    quote:    dark ? "#f2eeea" : "#1a1008",
   };
 
   const services = [
@@ -315,146 +339,9 @@ export default function App() {
     {quote:"We've been making billiards tables for decades but our online presence was embarrassing. Brand Buzzer understood our heritage right away and built a site that carries the weight of that legacy. It's the first thing we're proud to show new clients.",name:"Singh Billiards",role:"Director, singhbilliards.com"},
   ];
 
-  const cs = `
-    @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap');
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    ::-webkit-scrollbar{width:3px}
-    ::-webkit-scrollbar-thumb{background:#f0712744}
-    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    @keyframes grain{0%,100%{transform:translate(0,0)}25%{transform:translate(-2%,-2%)}50%{transform:translate(2%,1%)}75%{transform:translate(-1%,3%)}}
-    @keyframes cursorblink{0%,100%{opacity:1}50%{opacity:0}}
-    @keyframes scanline{0%{top:-10%}100%{top:110%}}
-    @keyframes floatAvatar{
-      0%  {transform:translateY(0px)   rotate(-0.4deg);filter:drop-shadow(0 10px 30px rgba(240,113,39,0.2))}
-      50% {transform:translateY(-3px)  rotate(0.4deg); filter:drop-shadow(0 15px 35px rgba(240,113,39,0.3))}
-      100%{transform:translateY(0px)   rotate(-0.4deg);filter:drop-shadow(0 10px 30px rgba(240,113,39,0.2))}
-    }
-    @keyframes avatarRingPulse{
-      0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.15}
-      50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.06}
-    }
-    .rv{opacity:0;transform:translateY(28px);transition:opacity 0.85s ease,transform 0.85s ease}
-    .rv.in{opacity:1;transform:translateY(0)}
-    .srv-row{position:relative;display:flex;align-items:center;gap:40px;padding:48px 32px;border-bottom:1px solid var(--bdr);transition:all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);cursor:pointer;overflow:hidden}
-    .srv-row:hover{background:rgba(240,113,39,0.03);padding-left:44px}
-    .srv-icon-box{width:72px;height:72px;border-radius:20px;background:rgba(240,113,39,0.12);display:flex;align-items:center;justify-content:center;border:1px solid rgba(240,113,39,0.25);transition:all 0.4s;flex-shrink:0;box-shadow:0 10px 20px rgba(0,0,0,0.1)}
-    .srv-row:hover .srv-icon-box{background:rgba(240,113,39,0.2);border-color:#f07127;transform:scale(1.05) rotate(0deg);box-shadow:0 0 30px rgba(240,113,39,0.3)}
-    .srv-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mut);transition:all 0.4s;min-width:32px;opacity:0.4;letter-spacing:0.1em}
-    .srv-row:hover .srv-num{color:#f07127;opacity:1}
-    .srv-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:600;margin-bottom:10px;color:var(--txt);transition:color 0.3s;letter-spacing:-0.01em}
-    .srv-row:hover .srv-title{color:#f07127}
-    .srv-desc{color:var(--mut);fontSize:0.95rem;lineHeight:1.75;maxWidth:80%;transition:color 0.3s}
-    .srv-row:hover .srv-desc{color:var(--txt)}
-    .srv-arrow{font-size:1.6rem;color:rgba(240,113,39,0.3);transition:all 0.4s ease}
-    .srv-row:hover .srv-arrow{color:#f07127;transform:translateX(10px)}
-    @keyframes spin3d{
-      0%{transform:rotateY(0deg) translateY(0px)}
-      25%{transform:rotateY(90deg) translateY(-8px)}
-      50%{transform:rotateY(180deg) translateY(0px)}
-      75%{transform:rotateY(270deg) translateY(8px)}
-      100%{transform:rotateY(360deg) translateY(0px)}
-    }
-    .p-tab{position:relative;padding:12px 24px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:500;letter-spacing:0.05em;color:var(--mut);transition:all 0.3s;border-radius:8px;z-index:2}
-    .p-tab.active{color:#f07127}
-    .p-indicator{position:absolute;height:100%;background:rgba(240,113,39,0.08);border:1px solid rgba(240,113,39,0.2);border-radius:8px;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);z-index:1}
-    .mockup-frame{position:relative;width:100%;max-width:760px;margin:0 auto;background:#111;border-radius:12px 12px 0 0;padding:8px;border:4px solid #222;box-shadow:0 20px 80px rgba(0,0,0,0.4)}
-    .mockup-content{width:100%;padding-bottom:62.5%;background:#000;overflow:hidden;position:relative}
-    .mockup-base{width:820px;max-width:110%;height:10px;background:#333;margin:0 auto;border-radius:0 0 10px 10px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-
-    @media (min-width: 1025px) {
-      .p-tab-container::-webkit-scrollbar { display: none; }
-      .p-tab-container { scrollbar-width: none; }
-    }
-    @media (max-width: 1024px) {
-      .p-tab-container::-webkit-scrollbar { display: block; height: 6px; }
-      .p-tab-container::-webkit-scrollbar-track { background: rgba(240,113,39,0.05); border-radius: 4px; }
-      .p-tab-container::-webkit-scrollbar-thumb { background: rgba(240,113,39,0.3); border-radius: 4px; }
-    }
-    .outside-nav-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--bg); border: 1px solid var(--bdr);
-      display: flex; align-items: center; justify-content: center;
-      color: #f07127; cursor: pointer; z-index: 10;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s;
-    }
-    .outside-nav-btn:hover { background: #f07127; color: #0f0f0f; transform: translateY(-50%) scale(1.1); border-color: #f07127; }
-    .outside-nav-btn.left { left: -24px; }
-    .outside-nav-btn.right { right: -24px; }
-
-    .mobile-menu-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-      background: var(--bg); z-index: 200; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 24px;
-      transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 40px; pointer-events: none; opacity: 0;
-    }
-    .mobile-menu-overlay.open { transform: translateX(0); pointer-events: auto; opacity: 1; }
-    .mobile-link {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem;
-      font-weight: 600; text-transform: uppercase; color: var(--txt);
-      text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s;
-    }
-    .mobile-link:hover { color: #f07127; }
-    .hamburger { display: none; }
-
-    @media (max-width: 1024px) {
-      .dnm { display: none !important; }
-      .hamburger {
-        display: flex !important; flex-direction: column; gap: 6px;
-        background: none; border: none; cursor: pointer; z-index: 210;
-        padding: 10px;
-      }
-      .hamburger span {
-        display: block; width: 24px; height: 2px; background: #f07127;
-        transition: all 0.3s;
-      }
-      .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-      .hamburger.open span:nth-child(2) { opacity: 0; }
-      .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-      
-      .hamburger-container { display: flex !important; }
-      nav { background: var(--bg) !important; border-bottom: 1px solid var(--bdr) !important; }
-      .g2, .g3, .g4, .srv-row { grid-template-columns: 1fr !important; flex-direction: column !important; gap: 30px !important; align-items: flex-start !important; }
-      .srow { flex-direction: column !important; }
-      .srow > div { border-right: none !important; border-bottom: 1px solid var(--bdr); }
-      .srow > div:last-child { border-bottom: none; }
-      .hero-section { flex-direction: column !important; padding-top: 120px !important; text-align: center !important; justify-content: center !important; }
-      .hero-title { font-size: 2.8rem !important; margin-left: auto !important; margin-right: auto !important; }
-      .hero-desc { margin-left: auto !important; margin-right: auto !important; }
-      .hero-btns { justify-content: center !important; }
-      .srv-desc { max-width: 100% !important; }
-      .p-dashboard { flex-direction: column !important; align-items: center !important; }
-      .p-preview-container { width: 100% !important; flex: none !important; margin-bottom: 20px; }
-      .p-tab-container { flex-wrap: nowrap !important; justify-content: flex-start !important; overflow-x: auto !important; padding-bottom: 12px !important; margin-bottom: 30px !important; }
-      .p-tab { flex-shrink: 0; }
-      .hero-grid { background-size: 40px 40px !important; }
-      .hero-illustration { position: relative !important; transform: none !important; width: 80% !important; margin: 40px auto 0 !important; right: auto !important; top: auto !important; }
-      .hero-background { width: 100% !important; opacity: 0.4 !important; }
-      .hero-stats { position: relative !important; padding: 40px 6% !important; border-bottom: 1px solid var(--bdr); }
-      .mockup-base { width: 100% !important; margin: 0 !important; }
-    }
-
-    @media (max-width: 640px) {
-      .hero-title { font-size: 2.2rem !important; }
-      .mockup-frame { border-width: 2px; border-radius: 8px 8px 0 0; padding: 4px; width: 100%; max-width: none; }
-      .mockup-base { border-radius: 0 0 6px 6px; height: 6px; }
-      .srv-row { padding: 32px 20px !important; }
-      .srv-icon-box { width: 56px; height: 56px; }
-      section { padding: 50px 6% !important; }
-      .outside-nav-btn { width: 40px; height: 40px; }
-      .outside-nav-btn.left { left: -12px; }
-      .outside-nav-btn.right { right: -12px; }
-      .outside-nav-btn svg { width: 20px; height: 20px; }
-    }
-
-  `;
-
   return (
     <div style={{fontFamily:"'Barlow','Arial Narrow',sans-serif",background:T.bg,color:T.text,overflowX:"hidden",minHeight:"100vh",transition:"background 0.4s,color 0.4s", "--bg": T.bg, "--txt": T.text, "--bdr": T.border}}>
-      <style>{cs}</style>
-
+      
       {/* ── NAV ── */}
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,padding:"0 6%",height:"68px",display:"flex",alignItems:"center",justifyContent:"space-between",background:T.navBg,backdropFilter:scrolled?"blur(20px)":"none",borderBottom:scrolled?`1px solid ${T.border}`:"none",transition:"all 0.4s"}}>
         <div style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
@@ -471,19 +358,19 @@ export default function App() {
         
         {/* Mobile Nav Toggle */}
         <div style={{display:"none", gap:"10px", alignItems:"center"}} className="hamburger-container">
-           <button className={`hamburger ${mobileMenuOpen?"open":""}`} onClick={()=>setMobileMenuOpen(!mobileMenuOpen)}>
+           <button className={`hamburger ${mobileMenuOpen?"open":""}`} onClick={()=>setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle navigation menu">
              <span/><span/><span/>
            </button>
         </div>
-
-        {/* Mobile Menu Overlay */}
-        <div className={`mobile-menu-overlay ${mobileMenuOpen?"open":""}`}>
-          {["Services","Process","Live Work","Results","Contact"].map(n=>(
-            <a key={n} href={`#${n.toLowerCase().replace(" ","-")}`} className="mobile-link" onClick={(e)=>{e.preventDefault(); go(n.toLowerCase().replace(" ","-")); setMobileMenuOpen(false);}}>{n}</a>
-          ))}
-          <button onClick={()=>{go("contact"); setMobileMenuOpen(false);}} style={{marginTop:"20px", background:"#f07127", color:"#0f0f0f", border:"none", padding:"16px 32px", fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.9rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase"}}>Get a Website</button>
-        </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-menu-overlay ${mobileMenuOpen?"open":""}`}>
+        {["Services","Process","Live Work","Results","Contact"].map(n=>(
+          <a key={n} href={`#${n.toLowerCase().replace(" ","-")}`} className="mobile-link" onClick={(e)=>{e.preventDefault(); go(n.toLowerCase().replace(" ","-")); setMobileMenuOpen(false);}}>{n}</a>
+        ))}
+        <button onClick={()=>{go("contact"); setMobileMenuOpen(false);}} style={{marginTop:"20px", background:"#f07127", color:"#0f0f0f", border:"none", padding:"16px 32px", fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.9rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", cursor:"pointer"}}>Get a Website</button>
+      </div>
 
       {/* ══ HERO ══ */}
       <section className="hero-section" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",padding:"100px 6% 100px",overflow:"hidden"}}>
@@ -516,9 +403,9 @@ export default function App() {
         </div>
         <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${T.gridLine} 1px,transparent 1px),linear-gradient(90deg,${T.gridLine} 1px,transparent 1px)`,backgroundSize:"80px 80px",pointerEvents:"none",zIndex:0}}/>
         <div style={{position:"absolute",left:"-2%",bottom:"-10%",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(8rem,20vw,20rem)",fontWeight:600,fontStyle:"italic",color:"transparent",WebkitTextStroke:`1px ${T.wmColor}`,lineHeight:1,pointerEvents:"none",userSelect:"none",zIndex:0}}>WEB</div>
-        <div style={{position:"relative",zIndex:2,maxWidth:580}}>
-          <div style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"36px",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(14px)",transition:"all 0.9s ease 0.1s"}}>
-            <div style={{width:32,height:1,background:"#f07127"}}/>
+        <div className="hero-content" style={{position:"relative",zIndex:2,maxWidth:580}}>
+          <div className="hero-sub-header" style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"36px",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(14px)",transition:"all 0.9s ease 0.1s"}}>
+            <div className="hero-sub-line" style={{width:32,height:1,background:"#f07127"}}/>
             <span style={{fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.2em",textTransform:"uppercase",color:"#f07127"}}>India's Fastest Web Studio · Brand Buzzer</span>
           </div>
           <h1 className="hero-title" style={{fontFamily:"Impact, sans-serif",fontSize:"clamp(2.5rem,5vw,4.5rem)",fontWeight:400,lineHeight:1.1,letterSpacing:"-0.01em",marginBottom:"28px",textTransform:"uppercase",opacity:heroVis?1:0,transform:heroVis?"none":"translateY(24px)",transition:"all 0.9s ease 0.2s",color:T.text}}>
@@ -529,13 +416,13 @@ export default function App() {
           </p>
 
           <div className="hero-btns" style={{display:"flex",gap:"14px",flexWrap:"wrap",opacity:heroVis?1:0,transition:"all 0.9s ease 0.52s"}}>
-            <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#f07127",color:"#0f0f0f",border:"none",padding:"16px 40px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s,transform 0.2s",clipPath:"polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))"}}
+            <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#f07127",color:"#0f0f0f",border:"none",padding:"16px 36px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s,transform 0.2s",clipPath:"polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))"}}
               onMouseOver={e=>{e.currentTarget.style.background="#e8621a";e.currentTarget.style.transform="translateY(-2px)"}} onMouseOut={e=>{e.currentTarget.style.background="#f07127";e.currentTarget.style.transform=""}}>Claim My Free Slot &nbsp;→</button>
-            <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"transparent",color:T.text,border:`1px solid ${dark?"rgba(242,238,234,0.18)":"rgba(26,16,8,0.2)"}`,padding:"15px 40px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"border-color 0.3s,color 0.3s"}}
+            <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"transparent",color:T.text,border:`1px solid ${dark?"rgba(242,238,234,0.18)":"rgba(26,16,8,0.2)"}`,padding:"15px 36px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.85rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"border-color 0.3s,color 0.3s"}}
               onMouseOver={e=>{e.currentTarget.style.borderColor="#f07127";e.currentTarget.style.color="#f07127"}} onMouseOut={e=>{e.currentTarget.style.borderColor=dark?"rgba(242,238,234,0.18)":"rgba(26,16,8,0.2)";e.currentTarget.style.color=T.text}}>See What We Build</button>
           </div>
         </div>
-        <div className="srow hero-stats" style={{position:"absolute",bottom:0,left:0,right:0,borderTop:`1px solid ${T.border}`,padding:"20px 6%",display:"flex",gap:"40px",flexWrap:"wrap",zIndex:2,opacity:heroVis?1:0,transition:"opacity 1.4s ease 0.8s",background:dark?"transparent":"rgba(245,242,238,0.7)"}}>
+        <div className="hero-stats" style={{position:"absolute",bottom:0,left:0,right:0,borderTop:`1px solid ${T.border}`,padding:"20px 6%",display:"flex",gap:"40px",flexWrap:"wrap",zIndex:2,opacity:heroVis?1:0,transition:"opacity 1.4s ease 0.8s",background:dark?"transparent":"rgba(245,242,238,0.7)"}}>
           {[["627+","Websites This Year"],["48h","Avg. Delivery"],["100%","Client Satisfaction"]].map(([v,l])=>(
             <div key={l} style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
               <span style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.55rem",fontWeight:500,fontStyle:"italic",color:"#f07127"}}>{v}</span>
@@ -578,7 +465,7 @@ export default function App() {
               }}
             />
             <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"8px"}}>The Brand Buzzer Advantage</p>
-            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.6rem,3vw,2.6rem)",fontWeight:500,lineHeight:1.15,whiteSpace:"nowrap",color:T.text}}>
+            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.6rem,3vw,2.6rem)",fontWeight:500,lineHeight:1.15,color:T.text}}>
               We Don't Just Build Sites. We Build <em style={{fontStyle:"italic",color:"#f07127"}}>Profit Engines.</em>
             </h2>
           </div>
@@ -613,7 +500,7 @@ export default function App() {
 
       {/* ── STATS ── */}
       <section ref={statsRef} style={{padding:"0 0 80px",background:T.bg,transition:"background 0.4s"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",borderTop:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,borderLeft:`1px solid ${T.border}`}}>
+        <div className="srow-container" style={{maxWidth:1200,margin:"0 auto",borderTop:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,borderLeft:`1px solid ${T.border}`}}>
           <div style={{display:"flex"}} className="srow">
             {[{target:627,suffix:"+",label:"Sites Launched This Year"},{target:48,suffix:"h",label:"Avg. Delivery Time"},{target:100,suffix:"%",label:"On-Time, Every Time"},{target:50,suffix:"k+",label:"Leads Generated for Clients"}].map((s,i)=>(
               <div key={i} style={{borderRight:`1px solid ${T.border}`,padding:"40px 28px",background:T.bg2,textAlign:"center",flex:1,minWidth:0,transition:"background 0.4s"}}>
@@ -657,9 +544,6 @@ export default function App() {
                 </div>
 
                 <span className="srv-arrow">→</span>
-                <style>{`
-                  .srv-row:hover .srv-reveal { width: 100% !important; }
-                `}</style>
               </div>
             ))}
           </div>
@@ -667,20 +551,59 @@ export default function App() {
       </section>
 
       {/* ── PROCESS ── */}
-      <section id="process" ref={procRef} style={{padding:"80px 6% 100px",background:T.bg2,borderTop:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,transition:"background 0.4s"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
+      <section id="process" ref={procRef} style={{padding:"90px 6% 110px",background:T.bg2,borderTop:`1px solid ${T.border}`,borderBottom:`1px solid ${T.border}`,transition:"background 0.4s",position:"relative"}}>
+        <div className="proc-wrapper">
           <div className={`rv${procIn?" in":""}`} style={{marginBottom:"64px",textAlign:"center"}}>
-            <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>The Velocity Framework</p>
-            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.9rem,3.2vw,2.9rem)",fontWeight:500,lineHeight:1.15,color:T.text}}>The 72-Hour Sprint to <em style={{fontStyle:"italic",color:"#f07127"}}>Market Dominance.</em></h2>
+            <p style={{fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.24em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>The Velocity Framework</p>
+            <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(2.1rem,3.8vw,3.2rem)",fontWeight:500,lineHeight:1.12,color:T.text}}>The 72-Hour Sprint to <em style={{fontStyle:"italic",color:"#f07127"}}>Market Dominance.</em></h2>
+            <p style={{color:T.muted,maxWidth:540,margin:"14px auto 0",fontSize:"0.9rem",lineHeight:1.7}}>From initial strategy to a live, conversion-ready website in 3 focused days.</p>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1px"}} className="g4">
-            {[{n:"01",title:"Discovery Call",desc:"A focused 30-min call where we dig into your goals, target audience, and biggest growth bottleneck."},{n:"02",title:"Design in 24hrs",desc:"You wake up the next day to high-fidelity mockups of your full website. Most clients say 'yes' on the first revision."},{n:"03",title:"Built to Perform",desc:"Speed-optimised, mobile-perfect, SEO-ready code — handcrafted, never templated. Lighthouse 96+ guaranteed."},{n:"04",title:"Live & Growing",desc:"Your site goes live, you get full ownership, and we stay on call for 30 days to ensure everything converts."}].map((step,i)=>(
-              <div key={step.n} className={`rv${procIn?" in":""}`} style={{transitionDelay:`${i*0.1}s`,background:T.bg,border:`1px solid ${T.border}`,padding:"40px 28px",position:"relative",overflow:"hidden",transition:"border-color 0.35s,transform 0.35s,background 0.4s",boxShadow:T.shadow}}
-                onMouseOver={e=>{e.currentTarget.style.borderColor="rgba(240,113,39,0.45)";e.currentTarget.style.transform="translateY(-6px)"}} onMouseOut={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.transform=""}}>
-                <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"4.5rem",fontWeight:900,fontStyle:"italic",color:"transparent",WebkitTextStroke:`1px rgba(240,113,39,${dark?0.2:0.3})`,lineHeight:1,marginBottom:"18px",userSelect:"none"}}>{step.n}</div>
-                <div style={{width:22,height:1,background:"#f07127",marginBottom:"18px"}}/>
-                <h4 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.05rem",fontWeight:500,marginBottom:"10px",color:T.text}}>{step.title}</h4>
-                <p style={{color:T.muted,fontSize:"0.82rem",lineHeight:1.7}}>{step.desc}</p>
+
+          <div className="proc-timeline-line"/>
+
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"20px",position:"relative",zIndex:2}} className="g4">
+            {[
+              {
+                n:"01",
+                time:"Hour 0–2",
+                title:"Discovery Call",
+                desc:"A focused 30-min call where we dig into your goals, target audience, and biggest growth bottleneck.",
+                icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              },
+              {
+                n:"02",
+                time:"Hour 2–24",
+                title:"Design in 24hrs",
+                desc:"You wake up the next day to high-fidelity mockups of your full website. Most clients say 'yes' on the first revision.",
+                icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              },
+              {
+                n:"03",
+                time:"Hour 24–48",
+                title:"Built to Perform",
+                desc:"Speed-optimised, mobile-perfect, SEO-ready code — handcrafted, never templated. Lighthouse 96+ guaranteed.",
+                icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              },
+              {
+                n:"04",
+                time:"Hour 48–72",
+                title:"Live & Growing",
+                desc:"Your site goes live, you get full ownership, and we stay on call for 30 days to ensure everything converts.",
+                icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f07127" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-3.05 11a22.35 22.35 0 0 1-3.95 2z"/></svg>
+              }
+            ].map((step,i)=>(
+              <div 
+                key={step.n} 
+                className={`rv${procIn?" in":""} proc-card`} 
+                style={{transitionDelay:`${i*0.12}s`, background: T.bg}}
+              >
+                <div className="proc-watermark">{step.n}</div>
+                <div className="proc-chip">⚡ {step.time}</div>
+                <div className="proc-icon-badge">
+                  {step.icon}
+                </div>
+                <h4 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.25rem",fontWeight:600,marginBottom:"10px",color:T.text,letterSpacing:"-0.01em"}}>{step.title}</h4>
+                <p style={{color:T.muted,fontSize:"0.84rem",lineHeight:1.75}}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -703,7 +626,7 @@ export default function App() {
 
           <div className={`p-tab-container rv${liveIn?" in":""}`} style={{marginBottom:"40px",position:"relative",display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"8px",background:dark?"rgba(255,255,255,0.02)":"rgba(0,0,0,0.02)",padding:"8px",borderRadius:"14px",width:"100%",maxWidth:850,margin:"0 auto 50px",border:`1px solid ${T.border}`}}>
             {projects.map((p,i)=>(
-              <div key={p.name} className={`p-tab ${activeP===i?"active":""}`} onClick={()=>setActiveP(i)} style={{padding:"10px 20px",cursor:"pointer",borderRadius:"10px",fontSize:"0.85rem",fontWeight:500,transition:"all 0.3s ease",textAlign:"center",background:activeP===i?"rgba(240,113,39,0.12)":"transparent",border:activeP===i?"1px solid rgba(240,113,39,0.3)":"1px solid transparent",color:activeP===i?"#f07127":T.muted}}>
+              <div key={p.name} className={`p-tab ${activeP===i?"active":""}`} onClick={()=>setActiveP(i)}>
                 {p.name}
               </div>
             ))}
@@ -712,33 +635,60 @@ export default function App() {
           <div className={`p-dashboard rv${liveIn?" in":""}`} style={{display:"flex",gap:"40px",alignItems:"flex-start"}}>
             {/* Left: Preview */}
             <div className="p-preview-container" style={{flex:1.4, minWidth:0, width:"100%", position:"relative"}}>
-              <div className="outside-nav-btn left" onClick={()=>setActiveP(prev=>(prev - 1 + projects.length) % projects.length)}>
+              <button className="outside-nav-btn left" onClick={()=>setActiveP(prev=>(prev - 1 + projects.length) % projects.length)} aria-label="Previous project">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              </div>
-              <div className="outside-nav-btn right" onClick={()=>setActiveP(prev=>(prev + 1) % projects.length)}>
+              </button>
+              <button className="outside-nav-btn right" onClick={()=>setActiveP(prev=>(prev + 1) % projects.length)} aria-label="Next project">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-              </div>
+              </button>
               <div style={{width:"100%"}}>
                 <div className="mockup-frame" style={{maxWidth:"100%"}}>
-                  <div className="mockup-content">
-                    <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.6s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
+                  <div 
+                    className="mockup-content"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                  >
+                    <div style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",transition:"transform 0.5s cubic-bezier(0.4,0,0.2,1)",transform:`translateX(-${activeP*100}%)`,display:"flex"}}>
                       {projects.map((p,i)=>(
-                        <div key={i} style={{minWidth:"100%",height:"100%",position:"relative"}}>
-                          {p.screenshot ? (
-                            <img src={p.screenshot} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top"}} />
-                          ) : (
-                            <iframe 
-                              src={p.url} 
-                              style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0"}} 
-                              title={p.name}
-                            />
-                          )}
-                          <div style={{position:"absolute",inset:0,background:"transparent"}}/>
-                          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:T.bg2,zIndex:-1}}>
-                            <div style={{textAlign:"center"}}>
-                              <p style={{color:T.muted,fontSize:"0.8rem",marginBottom:"8px"}}>Previewing {p.url}</p>
-                              <button style={{color:"#f07127",background:"transparent",border:"1px solid #f07127",padding:"6px 12px",borderRadius:4,fontSize:"0.7rem",cursor:"pointer"}}>Open Live Site</button>
+                        <div key={i} style={{minWidth:"100%",height:"100%",position:"relative",background:"#0d0d0d",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+                          {/* Browser Mockup Bar */}
+                          <div style={{height:"28px",background:"#1a1a1a",borderBottom:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",padding:"0 12px",justify:"space-between",zIndex:3,flexShrink:0}}>
+                            <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
+                              <div style={{width:8,height:8,borderRadius:"50%",background:"#ff5f56"}}/>
+                              <div style={{width:8,height:8,borderRadius:"50%",background:"#ffbd2e"}}/>
+                              <div style={{width:8,height:8,borderRadius:"50%",background:"#27c93f"}}/>
                             </div>
+                            <div style={{background:"rgba(255,255,255,0.06)",borderRadius:"4px",padding:"2px 14px",fontSize:"0.6rem",color:"rgba(255,255,255,0.6)",fontFamily:"'Courier New',monospace",display:"flex",alignItems:"center",gap:6,maxWidth:"60%",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              <span style={{color:"#4ade80"}}>🔒</span> {p.url}
+                            </div>
+                            <button 
+                              onClick={()=>window.open(p.url, "_blank", "noopener,noreferrer")}
+                              style={{background:"#f07127",color:"#0f0f0f",border:"none",borderRadius:"3px",padding:"2px 8px",fontSize:"0.58rem",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:600,cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"}}
+                            >
+                              Visit ↗
+                            </button>
+                          </div>
+
+                          {/* Content Preview Container */}
+                          <div style={{flex:1,position:"relative",overflow:"hidden",display:"flex",alignItems:"center",justify:"center",background:"#0a0a0a"}}>
+                            {p.screenshot ? (
+                              <img src={p.screenshot} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top"}} />
+                            ) : (
+                              <div style={{width:"100%",height:"100%",position:"relative",overflow:"hidden"}}>
+                                <iframe 
+                                  src={p.url} 
+                                  style={{width:"200%",height:"200%",border:"none",transform:"scale(0.5)",transformOrigin:"0 0",pointerEvents:"none"}} 
+                                  title={p.name}
+                                  loading="lazy"
+                                />
+                                <div 
+                                  style={{position:"absolute",inset:0,zIndex:2,cursor:"pointer"}} 
+                                  onClick={()=>window.open(p.url, "_blank", "noopener,noreferrer")} 
+                                  title={`Click to open ${p.name} live`}
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -750,7 +700,7 @@ export default function App() {
             </div>
 
             {/* Right: Details */}
-            <div style={{flex:1, display:"flex", flexDirection:"column", gap:"20px"}}>
+            <div className="p-details-container" style={{flex:1, display:"flex", flexDirection:"column", gap:"20px"}}>
               <div style={{background:T.bg2,padding:"32px",borderRadius:16,border:`1px solid ${T.border}`,boxShadow:T.shadow}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"20px"}}>
                   <div>
@@ -771,7 +721,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"24px"}}>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"8px"}}>
                 {/* Metric 1: Performance */}
                 <div style={{display:"flex",alignItems:"center",gap:"12px",background:T.bg2,padding:"14px",borderRadius:12,border:`1px solid ${T.border}`}}>
                   <div style={{width:36,height:36,borderRadius:8,background:"rgba(240,113,39,0.1)",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(240,113,39,0.2)",flexShrink:0}}>
@@ -817,7 +767,7 @@ export default function App() {
                 </div>
               </div>
 
-              <button onClick={()=>window.open(projects[activeP].url,"_blank")} style={{display:"inline-flex",justifyContent:"center",alignItems:"center",gap:10,background:"transparent",color:T.text,border:`1px solid ${T.border}`,padding:"14px 24px",borderRadius:8,fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:500,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",transition:"all 0.3s"}}
+              <button onClick={()=>window.open(projects[activeP].url,"_blank","noopener,noreferrer")} style={{display:"inline-flex",justifyContent:"center",alignItems:"center",gap:10,background:"transparent",color:T.text,border:`1px solid ${T.border}`,padding:"14px 24px",borderRadius:8,fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:500,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",transition:"all 0.3s"}}
                 onMouseOver={e=>{e.currentTarget.style.borderColor="#f07127";e.currentTarget.style.color="#f07127"}} onMouseOut={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.color=T.text}}>
                 Visit Live Website &nbsp;↗
               </button>
@@ -838,9 +788,9 @@ export default function App() {
             <p style={{fontSize:"0.66rem",fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",color:"#f07127",marginBottom:"14px"}}>Real Results. Real Clients.</p>
             <h2 style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.9rem,3.2vw,2.9rem)",fontWeight:500,lineHeight:1.15,color:T.text}}>Don't take our word for it.<br/><em style={{fontStyle:"italic",color:"#f07127"}}>Here's what our clients say.</em></h2>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px"}} className="g3">
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"16px"}} className="g3">
             {testimonials.map((t,i)=>(
-              <div key={i} className={`rv${testIn?" in":""}`} style={{transitionDelay:`${i*0.12}s`,background:T.bg2,border:`1px solid ${T.border}`,padding:"36px 28px",transition:"border-color 0.35s,transform 0.35s,background 0.4s",boxShadow:T.shadow}}
+              <div key={i} className={`rv${testIn?" in":""}`} style={{transitionDelay:`${i*0.12}s`,background:T.bg2,border:`1px solid ${T.border}`,padding:"36px 28px",transition:"border-color 0.35s,transform 0.35s,background 0.4s",boxShadow:T.shadow,borderRadius:"12px"}}
                 onMouseOver={e=>{e.currentTarget.style.borderColor="rgba(240,113,39,0.4)";e.currentTarget.style.transform="translateY(-5px)"}} onMouseOut={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.transform=""}}>
                 <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"3.5rem",fontWeight:600,color:"#f07127",opacity:0.2,lineHeight:1,marginBottom:"14px",userSelect:"none"}}>&ldquo;</div>
                 <p style={{color:T.muted,lineHeight:1.82,fontSize:"0.88rem",marginBottom:"26px",fontStyle:"italic"}}>{t.quote}</p>
@@ -873,23 +823,18 @@ export default function App() {
                   <span style={{color:T.text}}>{item}</span>
                 </div>
               ))}
-              <div style={{marginTop:"36px",padding:"22px 24px",border:`1px solid ${T.border}`,display:"flex",gap:"16px",alignItems:"center",background:T.bg,transition:"background 0.4s"}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#f07127"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <div style={{marginTop:"36px",padding:"22px 24px",border:`1px solid ${T.border}`,display:"flex",gap:"16px",alignItems:"center",background:T.bg,borderRadius:"10px",transition:"background 0.4s"}}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#f07127"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 <div>
                   <div style={{fontSize:"0.66rem",color:T.muted,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:"3px"}}>Prefer WhatsApp? Message us now</div>
-                  <a href="https://wa.me/917878584866" style={{color:"#f07127",fontSize:"0.95rem",fontWeight:600,textDecoration:"none"}}>+91 78785 84866</a>
+                  <a href="https://wa.me/917878584866" target="_blank" rel="noopener noreferrer" style={{color:"#f07127",fontSize:"0.95rem",fontWeight:600,textDecoration:"none"}}>+91 78785 84866</a>
                 </div>
               </div>
               </div>
             </div>
             <div className={`rv${ctaIn?" in":""}`} style={{transitionDelay:"0.2s"}}>
               <div style={{background: dark ? "rgba(242,238,234,0.03)" : "rgba(26,16,8,0.04)", border: `1px solid ${T.border}`, borderRadius: "12px", overflow: "hidden", position: "relative"}}>
-                <InlineWidget url="https://calendly.com/brandbuzzersocial" styles={{height: "650px", width: "100%"}} />
-                {/* Logo strip over the grey empty space at the bottom of the Calendly widget */}
-                <div style={{position:"absolute", bottom:0, left:0, right:0, height:"220px", background: dark ? "#171717" : "#ece8e2", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"12px", pointerEvents:"none", borderTop:`1px solid ${T.border}`}}>
-                  <img src="/logo.png" alt="BrandBuzzer Logo" style={{height:"52px", width:"auto", opacity: dark ? 0.9 : 1}} />
-                  <p style={{fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.72rem", fontWeight:500, letterSpacing:"0.18em", textTransform:"uppercase", color:T.muted}}>India's Fastest Web Studio</p>
-                </div>
+                <InlineWidget url="https://calendly.com/brandbuzzersocial" styles={{height: "660px", width: "100%"}} />
               </div>
             </div>
           </div>
@@ -898,13 +843,12 @@ export default function App() {
 
       {/* ── FOOTER ── */}
       <footer style={{padding:"40px 6%",borderTop:`1px solid ${T.border}`,background:T.bg,transition:"background 0.4s"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"20px"}}>
+        <div className="footer-content" style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"20px"}}>
           <div>
             <div style={{fontFamily:"'Barlow Condensed',sans-serif",fontSize:"1.15rem",fontWeight:500,marginBottom:"4px",color:T.text}}>Brand<em style={{fontStyle:"italic",color:"#f07127"}}>Buzzer</em></div>
             <div style={{color:T.muted,fontSize:"0.72rem"}}>Your Competitors Already Have a Great Website. Do You?</div>
           </div>
           <div style={{color:T.muted,fontSize:"0.72rem",textAlign:"center",lineHeight:1.8}}>
-            <div>D-186-A, Bhrigu Marg, Bani Park, Jaipur, Rajasthan 302016</div>
             <div>brandbuzzersocial@gmail.com · +91 78785 84866</div>
           </div>
           <div style={{color:T.muted,fontSize:"0.72rem"}}>&copy; 2025 Brand Buzzer. All rights reserved.</div>
