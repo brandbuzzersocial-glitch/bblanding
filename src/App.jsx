@@ -236,8 +236,24 @@ function ThemeToggle({ theme, toggle }) {
 }
 
 export default function App() {
-  const [theme] = useState("dark");
-  const dark = true;
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("bb_theme") || "dark";
+  });
+  const dark = theme === "dark";
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("bb_theme", next);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    document.body.style.backgroundColor = dark ? "#0f0f0f" : "#f5f2ee";
+    document.body.style.color = dark ? "#f2eeea" : "#1a1008";
+  }, [dark]);
 
   const [scrolled, setScrolled] = useState(false);
   const [heroVis, setHeroVis] = useState(false);
@@ -347,17 +363,19 @@ export default function App() {
         <div style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
           <img src="/logo.png" alt="BrandBuzzer Logo" style={{height:"40px",width:"auto"}} />
         </div>
-        <div className="dnm" style={{display:"flex",gap:"32px",alignItems:"center"}}>
+        <div className="dnm" style={{display:"flex",gap:"28px",alignItems:"center"}}>
           {["Services","Process","Live Work","Results","Contact"].map(n=>(
             <button key={n} onClick={()=>go(n.toLowerCase().replace(" ","-"))} style={{background:"none",border:"none",color:T.muted,fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:500,letterSpacing:"0.14em",textTransform:"uppercase",cursor:"pointer",transition:"color 0.3s",padding:0}}
               onMouseOver={e=>e.target.style.color=T.text} onMouseOut={e=>e.target.style.color=T.muted}>{n}</button>
           ))}
+          <ThemeToggle theme={theme} toggle={toggleTheme} />
           <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"#f07127",color:"#0f0f0f",border:"none",padding:"10px 22px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.72rem",fontWeight:500,letterSpacing:"0.16em",textTransform:"uppercase",cursor:"pointer",transition:"background 0.3s"}}
             onMouseOver={e=>e.currentTarget.style.background="#e8621a"} onMouseOut={e=>e.currentTarget.style.background="#f07127"}>Get a Website</button>
         </div>
         
         {/* Mobile Nav Toggle */}
-        <div style={{display:"none", gap:"10px", alignItems:"center"}} className="hamburger-container">
+        <div style={{display:"none", gap:"12px", alignItems:"center"}} className="hamburger-container">
+           <ThemeToggle theme={theme} toggle={toggleTheme} />
            <button className={`hamburger ${mobileMenuOpen?"open":""}`} onClick={()=>setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle navigation menu">
              <span/><span/><span/>
            </button>
@@ -369,7 +387,10 @@ export default function App() {
         {["Services","Process","Live Work","Results","Contact"].map(n=>(
           <a key={n} href={`#${n.toLowerCase().replace(" ","-")}`} className="mobile-link" onClick={(e)=>{e.preventDefault(); go(n.toLowerCase().replace(" ","-")); setMobileMenuOpen(false);}}>{n}</a>
         ))}
-        <button onClick={()=>{go("contact"); setMobileMenuOpen(false);}} style={{marginTop:"20px", background:"#f07127", color:"#0f0f0f", border:"none", padding:"16px 32px", fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.9rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", cursor:"pointer"}}>Get a Website</button>
+        <div style={{marginTop:"15px", marginBottom:"5px"}}>
+          <ThemeToggle theme={theme} toggle={toggleTheme} />
+        </div>
+        <button onClick={()=>{go("contact"); setMobileMenuOpen(false);}} style={{marginTop:"15px", background:"#f07127", color:"#0f0f0f", border:"none", padding:"16px 32px", fontFamily:"'Barlow Condensed',sans-serif", fontSize:"0.9rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", cursor:"pointer"}}>Get a Website</button>
       </div>
 
       {/* ══ HERO ══ */}
